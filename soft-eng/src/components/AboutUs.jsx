@@ -48,11 +48,11 @@ const AboutUs = () => {
   };
 
   const handleMissionLeave = () => {
-    setShowMission(false);
+    setShowMission(true);
   };
 
   const handleVisionLeave = () => {
-    setShowVision(false);
+    setShowVision(true);
   };
 
   // New hover state declarations for each section
