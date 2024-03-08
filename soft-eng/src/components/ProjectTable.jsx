@@ -11,22 +11,17 @@ const ProjectTable = () => {
     { id: 'PR06', name: 'Aqua Oasis Pool Complex', category: 'Pool', location: 'Quezon', startDate: '07-01-2023', endDate: '04-30-2024' },
     // ... Add the other project rows here in the same format
   ];
-  const [filter, setFilter] = useState(''); // State to hold the selected filter value
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // State to control the dropdown visibility
+  const [filter, setFilter] = useState('');
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isNewFormVisible, setIsNewFormVisible] = useState(false);
+
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
-  }
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    // Implement filtering logic here based on the selected value
-    // For demonstration, the filtering logic is not implemented in this snippet
-  
-    
+  };
 
-};
-  
-
-
+  const toggleNewFormVisibility = () => {
+    setIsNewFormVisible(!isNewFormVisible);
+  };
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -85,44 +80,54 @@ const ProjectTable = () => {
         <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
       <div className="flex justify-between items-center py-4 bg-white">
         <div className="flex items-center">
-          <div className="relative ml-4">
-            <input type="text" id="table-search" 
-              className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
-              placeholder="Search" />
-          </div>
-          {/* Dropdown menu for filtering directly next to search input, with matching size */}
-          
-          {/* "+ PROJECTS" button with space from the filter dropdown, matching size */}
-          <div className="relative">
-          <button
-            onClick={toggleDropdown}
-            style={{ backgroundColor: '#E8E5E5', borderColor: '#C6C1C1', borderWidth: '1px', borderStyle: 'solid',fontWeight: 'normal',color: 'white',background: '#444242' }}
-            className="inline-flex items-center hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
-
-          >
-          Filter
-        </button>
-        {isDropdownVisible && (
-          <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <a href="#excel" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Condominium</a>
-              <a href="#pdf" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">House</a>
-              <a href="#csv" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Pool</a>
-              {/* Add more export options as needed */}
+            <div className="relative ml-4">
+              <input type="text" id="table-search" 
+                className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
+                placeholder="Search" />
             </div>
-          </div>
-        )}
-      </div>
-      <div className="ml-2">
+                {/* Dropdown menu for filtering directly next to search input, with matching size */}
+                
+                {/* "+ PROJECTS" button with space from the filter dropdown, matching size */}
+                <div className="relative">
             <button
-                style={{ backgroundColor: '#0F076D' }}
-                className="inline-flex items-center hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-                + PROJECT
+              onClick={toggleDropdown}
+              style={{ backgroundColor: '#E8E5E5', borderColor: '#C6C1C1', borderWidth: '1px', borderStyle: 'solid', fontWeight: 'normal', color: 'white', background: '#444242' }}
+              className="inline-flex items-center hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
+            >
+              Filter
             </button>
-        </div>
-        
+            {isDropdownVisible && (
+              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                {/* Dropdown content */}
+              </div>
+            )}
+            {/* New button added beside the Filter button */}
+            <button
+                  onClick={toggleForm} // Toggle form visibility
+                  style={{ marginLeft: '8px', backgroundColor: '#0F076D' }} // Adjust styling as needed
+                  className="inline-flex items-center hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">
+                  Add Project
+            </button>
+            {isNewFormVisible && (
+  <div className="mt-4">
+    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      {/* Form fields */}
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newFieldName">
+          New Field Name
+        </label>
+        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="newFieldName" type="text" placeholder="Enter Name" />
+      </div>
+      <div className="flex items-center justify-between">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+)}
 
-
+          </div>
         </div>
       </div>
 

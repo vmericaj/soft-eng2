@@ -5,7 +5,7 @@ import logo from "../assets/se.png";
 import someImage1 from "../assets/Google.png";
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Login1 = () => {
   return (
     <div 
       className="flex justify-center items-center h-screen bg-no-repeat bg-cover" 
@@ -36,7 +36,7 @@ const Login = () => {
         <form className="space-y-6 mx-auto w-96">
         <div className="flex justify-center mb-6">
               {/* Make logo clickable by wrapping with Link */}
-              <Link to="/"> {/* Replace with your destination path */}
+              <Link to="/contact"> {/* Replace with your destination path */}
                 <img src={logo} alt="Logo" className="w-24 h-auto" /> {/* Logo */}
               </Link>
             </div>
@@ -46,7 +46,7 @@ const Login = () => {
             type="email"
             autoComplete="email"
             required
-            className="appearance-none rounded italic relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Email Address"
           />
           <input
@@ -55,7 +55,7 @@ const Login = () => {
             type="password"
             autoComplete="password"
             required
-            className="appearance-none relative block italic rounded w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Password"
           />
           <div className="flex items-center justify-between">
@@ -80,9 +80,9 @@ const Login = () => {
           {/* Include other form elements here */}
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-[#EF9400] bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            LOG IN
+            Log In
           </button>
           {/* Include other buttons or links here */}
           <div className="flex flex-col items-center space-y-6 mx-auto w-96">
@@ -104,15 +104,13 @@ const Login = () => {
                 </button>
                 
             </div>
-            <div className="flex flex-col items-center space-y-4">
-              <Link to="/signup" className="text-white hover:text-indigo-500 text-center mt-4">
-                Don't have an account? Sign Up
-              </Link>
-            </div>  
+
+            
+          
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Login1;
