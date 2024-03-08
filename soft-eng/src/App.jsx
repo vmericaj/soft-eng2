@@ -19,19 +19,12 @@ import Slideshow from './components/Slideshow';
 import MapContainer from './components/MapContainer';
 import Login from './components/Login';
 import ContactForm from './components/ContactForm';
-import GolfClubBanner from './components/GolfClubBanner';
+import SignUp from './components/SignUp';
+import Inventory from './components/Inventory';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-    </Router>
+    <Inventory/>
   );
  }
  export default App;
