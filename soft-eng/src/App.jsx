@@ -24,7 +24,7 @@ import Inventory from './components/Inventory';
 
 function App() {
   return (
-    <Inventory/>
+    <CustomersTable/>
   );
  }
  export default App;
