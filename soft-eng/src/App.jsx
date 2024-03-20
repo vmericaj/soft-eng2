@@ -1,9 +1,9 @@
 import React from 'react';
 import Sidebar from './components/Sidebar';
 import Logo from './components/Logo';
-import ProjectTable from './components/ProjectTable';
+
 import Dropdown from './components/Dropdown';
-import ProjectTable1 from './components/ProjectTable1';
+
 import CustomersTable from './components/CustomersTable';
 import SuppliersTable from './components/SuppliersTable';
 import HomePage from './components/HomePage';
@@ -21,10 +21,12 @@ import Login from './components/Login';
 import ContactForm from './components/ContactForm';
 import SignUp from './components/SignUp';
 import Inventory from './components/Inventory';
+import ProjectTable from './components/ProjectTable';
 
 function App() {
   return (
-    <CustomersTable/>
+    <ProjectTable/>
   );
  }
  export default App;
+ 
