@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import logo from "../assets/se.png";
-import { Link } from 'react-router-dom';
 import { TfiDashboard} from "react-icons/tfi";
 import { MdInventory2 } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import { BsFillPersonVcardFill } from "react-icons/bs";
 import { FaPeopleCarryBox } from "react-icons/fa6";
 import { VscAccount } from "react-icons/vsc";
+import { Link } from 'react-router-dom';
+
 
 // ... other imports ...
 
-const Inventory = () => {
+const Account = () => {
     
     const [projects, setProjects] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -103,9 +104,7 @@ const Inventory = () => {
             <h1 className="text-xl font-bold" style={{ color: '#EF9400' }}>3MV CONSTRUCTION</h1>
           </div>
         <div className="flex flex-col justify-between flex-1 mt-6">
-
           <nav>
-
           <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
@@ -130,8 +129,6 @@ const Inventory = () => {
             <VscAccount className="mr-2" /> 
             ACCOUNT
             </Link>
-      
-    
 
             {/* Repeat for other items */}
           </nav>
@@ -150,8 +147,8 @@ const Inventory = () => {
         {/* ... header content ... */}
         <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
         <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
-          <TfiDashboard className="mr-2 w-8 h-8 text-customBlue" /> {/* Icon */}
-          <h1 className="text-xl font-bold text-customBlue dark:text-white">DASHBOARD</h1> {/* Text */}
+          <VscAccount className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
+          <h1 className="text-xl font-bold text-customBlue dark:text-white">EMPLOYEES</h1> {/* Text */}
         </div>
           <div className="flex items-center space-x-2">
             {/* Search box */}
@@ -164,7 +161,6 @@ const Inventory = () => {
         {/* Main Content */}
         <div className="flex-1 p-6 bg-white overflow-hidden">
           
-          
 
 
 
@@ -176,4 +172,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default Account;

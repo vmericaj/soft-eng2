@@ -1,173 +1,323 @@
 import React, { useState } from 'react';
-import logo from "../assets/se.png"; // Ensure you have the logo image in the correct path
+import logo from "../assets/se.png";
+import { TfiDashboard} from "react-icons/tfi";
+import { MdInventory2 } from "react-icons/md";
+import { IoPersonSharp } from "react-icons/io5";
+import { BsFillPersonVcardFill } from "react-icons/bs";
+import { FaPeopleCarryBox } from "react-icons/fa6";
+import { VscAccount } from "react-icons/vsc";
+import { Link } from 'react-router-dom';
+
+
+
+// ... other imports ...
 
 const CustomersTable = () => {
-  const customers = [
-    { id: '401', fullName: 'Erica Moulice', contactNumber: '+63 917 203 2878', emailAdd: 'em@gmail.com', project: 'C101', total: 'Php 500,000', paid: 'Php 450,000', balance: 'Php 50,000'},
-    { id: '402', fullName: 'Krizzia Fronda', contactNumber: '+63 917 203 2878', emailAdd: 'kf@gmail.com', project: 'P101', total: 'Php 200,000', paid: 'Php 200,000', balance: '0' },
-    { id: '403', fullName: 'Earl Odiamar', contactNumber: '+63 917 203 2878', emailAdd: 'eo@gmail.com', project: 'C102', total: 'Php 999,999', paid: 'Php 900,000', balance: 'Php 99,999' },
-    { id: '404', fullName: 'Kie Apacible', contactNumber: '+63 917 203 2878', emailAdd: 'ka@gmail.com', project: 'H101', total: 'Php 500,000', paid: 'Php 400,000', balance: 'Php 100,000' },
-    { id: '405', fullName: 'Nina Vetus', contactNumber: '+63 917 203 2878', emailAdd: 'nv@gmail.com', project: 'P102', total: 'Php 134,240' , paid: 'Php 130,000', balance: 'Php 4,240'},
-    { id: '406', fullName: 'Stef James', contactNumber: '+63 917 203 2878', emailAdd: 'sj@gmail.com', project: 'H102', total: 'Php 30,000', paid: 'Php 30,000', balance: '0' },
-    // ... Add the other project rows here in the same format
-  ];
-  const [filter, setFilter] = useState(''); // State to hold the selected filter value
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // State to control the dropdown visibility
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
-  }
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    // Implement filtering logic here based on the selected value
-    // For demonstration, the filtering logic is not implemented in this snippet
-  
     
-
-};
+    const [customers, setCustomers] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [newCustomer, setNewCustomer] = useState({
+      cid: '',
+      name: '',
+      number: '',
+      email: '',
+      project: '',
+      total: '',
+      paid: '',
+      balance: '',
+      action: ''
+    });
+    
+    const [isEditing, setIsEditing] = useState(false);
+    const [editIndex, setEditIndex] = useState(-1);
   
 
+    // ... other functions ...
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewCustomer({ ...newCustomer, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (isEditing) {
+          const updatedCustomer = customers.map((item, index) => 
+            index === editIndex ? newCustomer : item
+          );
+          setCustomers(updatedCustomer);
+          setIsEditing(false);
+        } else {
+          setCustomers([...customers, newCustomer]);
+        }
+        // Reset form and hide it
+        setNewCustomer({
+          cid: '',
+          name: '',
+          number: '',
+          email: '',
+          project: '',
+          total: '',
+          paid: '',
+          balance: '',
+          action: ''
+        });
+        setShowForm(false);
+        setEditIndex(-1); // Reset the edit index
+      };
+      const handleAddCustomerClick = () => {
+        setShowForm(true);
+      };
+
+      const handleEditClick = (customer, index) => {
+        setNewCustomer(customer); // Changed from 'customers' to 'customer'
+        setShowForm(true);
+        setIsEditing(true);
+        setEditIndex(index);
+    };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    let updatedCustomer = [...customers];
+    updatedCustomer[editIndex] = newCustomer;
+    setCustomers(updatedCustomer);
+    setShowForm(false);
+    setNewCustomer({
+      cid: '',
+      name: '',
+      number: '',
+      email: '',
+      project: '',
+      total: '',
+      paid: '',
+      balance: '',
+      action: ''
+    });
+    setIsEditing(false);
+  };
+
+  const handleRemoveClick = (index) => {
+    // Filter out the project at the specific index
+    const updatedCustomer = customers.filter((_, customersIndex) => customersIndex !== index);
+    setCustomers(updatedCustomer);
+  };
+  const handleCancel = () => {
+    setShowForm(false);
+    setIsEditing(false);
+    setEditIndex(-1);
+    setNewCustomer({ // Changed from 'setNewProject' to 'setNewCustomer'
+        cid: '',
+        name: '',
+        number: '',
+        email: '',
+        project: '',
+        total: '',
+        paid: '',
+        balance: '',
+        action: ''
+    });
+};
+
+  
 
   return (
-    <div className="flex">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 h-screen text-white" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', background: 'black' }}>
-        <div className="flex items-center justify-center h-20 shadow-md">
-          {/* Logo and title */}
+      {/* ... sidebar content ... */}
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+        {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
             <h1 className="text-xl font-bold" style={{ color: '#EF9400' }}>3MV CONSTRUCTION</h1>
           </div>
-        </div>
-        <div className="p-6">
-          {/* Sidebar content */}
-          <div className="flex flex-col space-y-4">
-            {/* Each menu item */}
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>DASHBOARD</span>
-            </a>
-            <a href="#ProjectTable" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>PROJECTS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>CUSTOMERS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>SUPPLIERS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>EMPLOYEES</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>ACCOUNT</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>LOGOUT</span>
-            </a>
-            {/* Repeat for other links */}
+        <div className="flex flex-col justify-between flex-1 mt-6">
+          <nav>
+          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
+            DASHBOARD
+          </Link>
+          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <MdInventory2 className="mr-2" /> 
+            PROJECTS
+          </Link>
+          
+          <Link to="/customers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <IoPersonSharp className="mr-2" /> 
+            CUSTOMERS
+            </Link>
+          <Link to="/suppliers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <FaPeopleCarryBox className="mr-2" /> 
+            SUPPLIERS
+            </Link>
+          <Link to="/employees" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <BsFillPersonVcardFill className="mr-2" /> 
+            EMPLOYEES
+            </Link>
+          <Link to="/account" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <VscAccount className="mr-2" /> 
+            ACCOUNT
+            </Link>
+          
+          </nav>
+
+          <div className="flex items-center px-4 -mx-2">
+            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
+              <span>Log Out</span>
+            </button>
           </div>
         </div>
       </div>
-  
-      {/* Main content */}
-      <div className="flex-1 p-10">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold" style={{ color: '#0F076D' }}>CUSTOMERS</h2>
+
+      {/* Content Area */}
+      <div className="flex flex-col flex-1">
+        {/* Header */}
+        {/* ... header content ... */}
+        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
+        <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
+          <IoPersonSharp className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
+          <h1 className="text-xl font-bold text-customBlue dark:text-white">CUSTOMERS</h1> {/* Text */}
+        </div>
           <div className="flex items-center space-x-2">
             {/* Search box */}
-            <input className="border rounded px-2 py-1" type="search" placeholder="Search" />
-            {/* User widget */}
+            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
             <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
             <span>Juan Dela Cruz</span>
           </div>
         </div>
-        
-        {/* Project Table */}
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-      <div className="flex justify-between items-center py-4 bg-white">
-        <div className="flex items-center">
-          <div className="relative ml-4">
-            <input type="text" id="table-search" 
-              className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
-              placeholder="Search" />
-          </div>
-          {/* Dropdown menu for filtering directly next to search input, with matching size */}
-          
-          {/* "+ PROJECTS" button with space from the filter dropdown, matching size */}
-          <div className="relative">
-          <button
-            onClick={toggleDropdown}
-            style={{ backgroundColor: '#E8E5E5', borderColor: '#C6C1C1', borderWidth: '1px', borderStyle: 'solid',fontWeight: 'normal',color: 'white',background: '#444242' }}
-            className="inline-flex items-center hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
 
-          >
-          Filter
-        </button>
-        {isDropdownVisible && (
-          <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <a href="#excel" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Condominium</a>
-              <a href="#pdf" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">House</a>
-              <a href="#csv" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Pool</a>
-              {/* Add more export options as needed */}
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="ml-2">
+        {/* Main Content */}
+        <div className="flex-1 p-6 bg-white overflow-hidden">
+          {/* Main Content goes here */}
+          <div className="mb-4">
+            {/* Search box */}
+           
             <button
-                style={{ backgroundColor: '#0F076D' }}
-                className="inline-flex items-center hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-                + CUSTOMER
+              onClick={() => { 
+                handleAddCustomerClick(); 
+                setIsEditing(false); 
+                setEditIndex(-1); // Reset edit index when adding a new project
+              }}
+              className="bg-customBlue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              + CUSTOMER
             </button>
-            
-        </div>
-        
+          </div>
+
+          {showForm && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+                <div className="bg-white p-8 rounded shadow-xl">
+                    
+                <form onSubmit={handleSubmit} className="space-y-4">
+  <div className="flex items-center space-x-4">
+   
+    <div>
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cid">
+        CUSTOMER ID
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="cid"
+        type="text"
+        placeholder="Enter CID"
+        name="cid"
+        value={newCustomer.cid}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cid">
+        FULL NAME
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="name"
+        type="text"
+        placeholder="Enter Name"
+        name="name"
+        value={newCustomer.name}
+        onChange={handleChange}
+        required
+      />
+    </div>
+
+    
+  </div>
 
 
-        </div>
-      </div>
+  
 
-          {/* Table */}
+  
+
+  <div className="flex items-center space-x-4">
+                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-md">
+                  Save
+                </button>
+                <button type="button" onClick={handleCancel} className="bg-red-500 text-white px-4 py-2 rounded-md">
+                  Cancel
+                </button>
+              </div>
+</form>
+
+                </div>
+            </div>
+          )}
+
+          {/* Table to display the projects */}
+          {/* ... table ... */}
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
-          <thead style={{ boxShadow: '0 6px 8px rgba(0, 0, 0, 0.1)' }}>
-        <tr>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>CID</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Full Name</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Contact Number</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Email Address</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Project</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Total</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Paid</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Balance</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    {customers.map((cus) => (
-        <tr key={cus.id}>
-        <td style={{ padding: '12px' }}>{cus.id}</td>
-        <td style={{ padding: '12px' }}>{cus.fullName}</td>
-        <td style={{ padding: '12px' }}>{cus.contactNumber}</td>
-        <td style={{ padding: '12px' }}>{cus.emailAdd}</td>
-        <td style={{ padding: '12px' }}>{cus.project}</td>
-        <td style={{ padding: '12px' }}>{cus.total}</td>
-        <td style={{ padding: '12px' }}>{cus.paid}</td>
-        <td style={{ padding: '12px' }}>{cus.balance}</td>
-        <td style={{ padding: '12px' }}>
-            <button style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}>
-            Edit
-            </button>
-            <button style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}>
-            Remove
-            </button>
-        </td>
-        </tr>
-    ))}
-    </tbody>
-          </table>
+          <thead className="text-xs text-white uppercase bg-customBlue">
+                    <tr>
+                    <th scope="col" className="px-6 py-3">CID</th>
+                    <th scope="col" className="px-6 py-3">Full Name</th>
+                    <th scope="col" className="px-6 py-3">Contact Number</th>
+                    <th scope="col" className="px-6 py-3">Email Address</th>
+                    <th scope="col" className="px-6 py-3">Project</th>
+                    <th scope="col" className="px-6 py-3">Total</th>
+                    <th scope="col" className="px-6 py-3">Paid</th>
+                    <th scope="col" className="px-6 py-3">Balance</th>
+                    <th scope="col" className="px-6 py-3">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {customers.map((customer, index) => (
+                        <tr key={index} className="bg-white border-b">
+                                        <td className="px-6 py-4">{customer.cid}</td>
+                            <td className="px-6 py-4">{customer.name}</td>
+                            <td className="px-6 py-4">{customer.email}</td>
+                            <td className="px-6 py-4">{customer.project}</td>
+                            <td className="px-6 py-4">{customer.total}</td>
+                            <td className="px-6 py-4">{customer.paid}</td>
+                            <td className="px-6 py-4">{customer.balance}</td>
+                            <td className="px-6 py-4">{customer.action}</td>
+                            <td style={{ padding: '12px' }}>
+                            <button
+                            style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
+                            onClick={() => handleEditClick(customer, index)}
+                            >
+                            Edit
+                            </button>
+                            <button
+                            style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
+                            onClick={() => handleRemoveClick(index)}
+                            >
+                            Remove
+                            </button>
+                            </td>
+                            
+                            {/* ... other columns ... */}
+                          
+
+                        </tr>
+                        ))}
+                    </tbody>
+                </table>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
+
 export default CustomersTable;
