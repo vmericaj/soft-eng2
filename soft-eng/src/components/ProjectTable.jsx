@@ -55,6 +55,8 @@ const ProjectTable = () => {
     const [deleteIndex, setDeleteIndex] = useState(null);
     const [currentAction, setCurrentAction] = useState('');
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+
 
     const [showNotifications, setShowNotifications] = useState(false);
     // Example notifications data
@@ -95,22 +97,26 @@ const ProjectTable = () => {
     
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        if (isEditing) {
+      e.preventDefault();
+      let successMessage = '';
+  
+      if (isEditing) {
           const updatedProjects = projects.map((item, index) => 
-            index === editIndex ? newProject : item
+              index === editIndex ? newProject : item
           );
           setProjects(updatedProjects);
           setIsEditing(false);
-          createNotification(`Project ${newProject.projectName} updated.`); 
-        } else {
+          successMessage = `Successfully updated the project '${newProject.projectName}'.`;
+      } else {
           setProjects([...projects, newProject]);
-          addNotification(newProject);
-        }
-        setShowSuccessAlert(true); // Show success alert
-        setTimeout(() => setShowSuccessAlert(false), 3000); 
-        // Reset form and hide it
-        setNewProject({
+          successMessage = `Successfully added the project '${newProject.projectName}'.`;
+      }
+  
+      createNotification(successMessage);
+      setShowSuccessAlert(true);
+      setTimeout(() => setShowSuccessAlert(false), 3000);
+  
+      setNewProject({
           pid: '',
           projectName: '',
           category: '',
@@ -118,10 +124,11 @@ const ProjectTable = () => {
           startDate: '',
           endDate: '',
           status: ''
-        });
-        setShowForm(false);
-        setEditIndex(-1); // Reset the edit index
-      };
+      });
+      setShowForm(false);
+      setEditIndex(-1); // Reset the edit index
+  };
+  
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
         setCurrentAction('add');
@@ -186,15 +193,19 @@ const cancelDelete = () => {
     setDeleteIndex(null);
 };
 const deleteProject = () => {
-  if (deleteIndex != null) { // Ensure there is something to delete
-    const projectToDelete = projects[deleteIndex];
-    const updatedProjects = projects.filter((_, index) => index !== deleteIndex);
-    setProjects(updatedProjects);
-    createNotification(`Deleted project: ${projectToDelete.projectName}`);
+  if (deleteIndex != null) {
+      const projectToDelete = projects[deleteIndex];
+      const updatedProjects = projects.filter((_, index) => index !== deleteIndex);
+      setProjects(updatedProjects);
+      createNotification(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+      setShowSuccessAlert(true);
+      setSuccessMessage(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+      setTimeout(() => setShowSuccessAlert(false), 3000);
+      setDeleteIndex(null); // Reset delete index after deletion
   }
   setShowPasswordPrompt(false);
-  setDeleteIndex(null); // Reset delete index after deletion
 };
+
 
 
   const handleSearchChange = (e) => {
@@ -274,10 +285,7 @@ const filteredProjects = getFilteredProjects();
             <IoPersonSharp className="mr-2" /> 
             CUSTOMERS
             </Link>
-          <Link to="/suppliers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
-            <FaPeopleCarryBox className="mr-2" /> 
-            SUPPLIERS
-            </Link>
+
           <Link to="/employees" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <BsFillPersonVcardFill className="mr-2" /> 
             EMPLOYEES
@@ -378,10 +386,11 @@ const filteredProjects = getFilteredProjects();
         + PROJECT
     </button>
     {showSuccessAlert && (
-        <div style={alertStyle} className="flex items-center">
-          <span className="text-green-800">Success! Project added.</span>
-        </div>
-      )}
+    <div style={alertStyle} className="flex items-center">
+        <span className="text-green-800">{successMessage}</span>
+    </div>
+)}
+
 </div>
 
 {showDeleteConfirmation && (

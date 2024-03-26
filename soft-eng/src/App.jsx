@@ -24,14 +24,10 @@ import Form from './components/Form';
 import Login1 from './components/Login';
 import SignUp from './components/SignUp';
 import CreateAccount from './components/CreateAccount';
-import Form1 from './Form1';
-import Table from './Table';
-import Table1 from './Table1';
 import ProjectTable from './components/ProjectTable';
 import Inventory from './components/Inventory';
 import Account from './components/Account';
 import Employees from './components/Employees';
-import Notification from './components/Notification';
 
 
 function App() {
@@ -49,3 +45,4 @@ function App() {
   );
  }
  export default App;
+ 
