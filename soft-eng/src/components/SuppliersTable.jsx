@@ -1,170 +1,285 @@
 import React, { useState } from 'react';
-import logo from "../assets/se.png"; // Ensure you have the logo image in the correct path
+import logo from "../assets/se.png";
+import { TfiDashboard} from "react-icons/tfi";
+import { MdInventory2 } from "react-icons/md";
+import { IoPersonSharp } from "react-icons/io5";
+import { BsFillPersonVcardFill } from "react-icons/bs";
+import { FaPeopleCarryBox } from "react-icons/fa6";
+import { VscAccount } from "react-icons/vsc";
+import { Link } from 'react-router-dom';
+
+
+
+// ... other imports ...
 
 const SuppliersTable = () => {
-  const suppliers = [
-    { id: 'S01', pid: 'PCSI01', sName: 'Construction Suppliers Inc', cPerson: 'John Johnson', address: '123 Main Street, Cityville', emailAdd: 'const.jj@gmail.com', cNumber: '+63 917 233 2218'},
-    { id: 'S02', pid: 'PSD05', sName: 'Steel Dynamics LLC', cPerson: 'Emma Davis', address: '456 Oak Avenue, Townsville', emailAdd: 'steel.ed@gmail.com', cNumber: '+63 917 765 4321'},
-    { id: 'S03', pid: 'PRS03', sName: 'Roofing Solutions Ltd', cPerson: 'Robert Smith', address: 'BGC, Taguig', emailAdd: 'rfsolutions.rs@gmail.com', cNumber: '+63 917 233 4455'},
-    { id: 'S04', pid: 'PMS04', sName: 'Masanory Safety Inc', cPerson: 'Alice Brown', address: 'Marilao, Bulacan', emailAdd: 'alice.brown@gmail.com', cNumber: '+63 917 887 76655'},
-    { id: 'S05', pid: 'PTT02', sName: 'Timber Traders Inc.', cPerson: 'Michael Wang', address: 'Sampaloc, Manila', emailAdd: 'timber.mw@gmail.com', cNumber: '+63 917 788 9900'},
     
-    // ... Add the other project rows here in the same format
-  ];
-  const [filter, setFilter] = useState(''); // State to hold the selected filter value
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // State to control the dropdown visibility
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
-  }
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    // Implement filtering logic here based on the selected value
-    // For demonstration, the filtering logic is not implemented in this snippet
-  
+    const [suppliers, setSuppliers] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [newSupplier, setNewSupplier] = useState({
+      pid: '',
+      projectName: '',
+      category: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      status: ''
+    });
     
+    const [isEditing, setIsEditing] = useState(false);
+    const [editIndex, setEditIndex] = useState(-1);
 
-};
-  
+    // ... other functions ...
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewSupplier({ ...newSupplier, [name]: value });
+    };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (isEditing) {
+          const updatedSuppliers = suppliers.map((item, index) => 
+            index === editIndex ? newSupplier : item
+          );
+          setSuppliers(updatedSuppliers);
+          setIsEditing(false);
+        } else {
+          setSuppliers([...suppliers, newSupplier]);
+        }
+        // Reset form and hide it
+        setNewSupplier({
+          pid: '',
+          projectName: '',
+          category: '',
+          location: '',
+          startDate: '',
+          endDate: '',
+          status: ''
+        });
+        setShowForm(false);
+        setEditIndex(-1); // Reset the edit index
+      };
+      const handleAddSupplierClick = () => {
+        setShowForm(true);
+      };
+
+  const handleEditClick = (supplier, index) => {
+    setNewSupplier(supplier);
+    setShowForm(true);
+    setIsEditing(true);
+    setEditIndex(index);
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    let updatedSuppliers = [...suppliers];
+    updatedSuppliers[editIndex] = newSupplier;
+    setSuppliers(updatedSuppliers);
+    setShowForm(false);
+    setNewSupplier({
+      pid: '',
+      projectName: '',
+      category: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      status: ''
+    });
+    setIsEditing(false);
+  };
+
+  const handleRemoveClick = (index) => {
+    // Filter out the project at the specific index
+    const updatedSuppliers = suppliers.filter((_, supplierIndex) => supplierIndex !== index);
+    setSuppliers(updatedSuppliers);
+  };
+  const handleCancel = () => {
+    // Reset form and hide it
+    setNewSupplier({
+      pid: '',
+      projectName: '',
+      category: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      status: ''
+    });
+    setShowForm(false);
+    setIsEditing(false);
+    setEditIndex(-1); // Reset the edit index
+  };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 h-screen text-white" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', background: 'black' }}>
-        <div className="flex items-center justify-center h-20 shadow-md">
-          {/* Logo and title */}
+      {/* ... sidebar content ... */}
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+        {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
             <h1 className="text-xl font-bold" style={{ color: '#EF9400' }}>3MV CONSTRUCTION</h1>
           </div>
-        </div>
-        <div className="p-6">
-          {/* Sidebar content */}
-          <div className="flex flex-col space-y-4">
-            {/* Each menu item */}
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>DASHBOARD</span>
-            </a>
-            <a href="#ProjectTable" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>PROJECTS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>CUSTOMERS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>SUPPLIERS</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>EMPLOYEES</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>ACCOUNT</span>
-            </a>
-            <a href="#dashboard" className="flex items-center space-x-2 hover:text-gray-300">
-              <span>LOGOUT</span>
-            </a>
-            {/* Repeat for other links */}
+        <div className="flex flex-col justify-between flex-1 mt-6">
+          <nav>
+          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
+            DASHBOARD
+          </Link>
+          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <MdInventory2 className="mr-2" /> 
+            PROJECTS
+          </Link>
+          
+          <Link to="/customers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <IoPersonSharp className="mr-2" /> 
+            CUSTOMERS
+            </Link>
+          <Link to="/suppliers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <FaPeopleCarryBox className="mr-2" /> 
+            SUPPLIERS
+            </Link>
+          <Link to="/employees" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <BsFillPersonVcardFill className="mr-2" /> 
+            EMPLOYEES
+            </Link>
+          <Link to="/account" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+            <VscAccount className="mr-2" /> 
+            ACCOUNT
+            </Link>
+          
+          </nav>
+
+          <div className="flex items-center px-4 -mx-2">
+            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
+              <span>Log Out</span>
+            </button>
           </div>
         </div>
       </div>
-  
-      {/* Main content */}
-      <div className="flex-1 p-10">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold" style={{ color: '#0F076D' }}>SUPPLIERS</h2>
+
+      {/* Content Area */}
+      <div className="flex flex-col flex-1">
+        {/* Header */}
+        {/* ... header content ... */}
+        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
+        <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
+          <FaPeopleCarryBox className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
+          <h1 className="text-xl font-bold text-customBlue dark:text-white">SUPPLIERS</h1> {/* Text */}
+        </div>
           <div className="flex items-center space-x-2">
             {/* Search box */}
-            <input className="border rounded px-2 py-1" type="search" placeholder="Search" />
-            {/* User widget */}
+            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
             <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
             <span>Juan Dela Cruz</span>
           </div>
         </div>
-        
-        {/* Project Table */}
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-      <div className="flex justify-between items-center py-4 bg-white">
-        <div className="flex items-center">
-          <div className="relative ml-4">
-            <input type="text" id="table-search" 
-              className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
-              placeholder="Search" />
-          </div>
-          {/* Dropdown menu for filtering directly next to search input, with matching size */}
-          
-          {/* "+ PROJECTS" button with space from the filter dropdown, matching size */}
-          <div className="relative">
-          <button
-            onClick={toggleDropdown}
-            style={{ backgroundColor: '#E8E5E5', borderColor: '#C6C1C1', borderWidth: '1px', borderStyle: 'solid',fontWeight: 'normal',color: 'white',background: '#444242' }}
-            className="inline-flex items-center hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
 
-          >
-          Filter
-        </button>
-        {isDropdownVisible && (
-          <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <a href="#excel" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Condominium</a>
-              <a href="#pdf" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">House</a>
-              <a href="#csv" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Pool</a>
-              {/* Add more export options as needed */}
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="ml-2">
+        {/* Main Content */}
+        <div className="flex-1 p-6 bg-white overflow-hidden">
+          {/* Main Content goes here */}
+          <div className="mb-4">
             <button
-                style={{ backgroundColor: '#0F076D' }}
-                className="inline-flex items-center hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-                + SUPPLIER
+              onClick={() => { 
+                handleAddSupplierClick(); 
+                setIsEditing(false); 
+                setEditIndex(-1); // Reset edit index when adding a new project
+              }}
+              className="bg-customBlue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              + SUPPLIER
             </button>
-        </div>
-        
+          </div>
 
+          {showForm && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+                <div className="bg-white p-8 rounded shadow-xl">
+                    
+                <form onSubmit={handleSubmit} className="space-y-4">
+  <div className="flex items-center space-x-4">
+   
+    <div>
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pid">
+        SUPPLIER ID
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="pid"
+        type="text"
+        placeholder="Enter PID"
+        name="pid"
+        value={newSupplier.pid}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="flex items-center space-x-4">
+                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-md">
+                  Save
+                </button>
+                <button type="button" onClick={handleCancel} className="bg-red-500 text-white px-4 py-2 rounded-md">
+                  Cancel
+                </button>
+              </div>
 
-        </div>
-      </div>
+  </div>
+</form>
 
-          {/* Table */}
+                </div>
+            </div>
+          )}
+
+          {/* Table to display the projects */}
+          {/* ... table ... */}
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
-          <thead style={{ boxShadow: '0 6px 8px rgba(0, 0, 0, 0.1)' }}>
-        <tr>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>SID</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>PID</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Supplier Name</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Contact Person</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Address</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Email Address</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Contact Number</th>
-        <th style={{ fontWeight: 'normal', padding: '12px', background: '#0F076D', color: 'white' }}>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    {suppliers.map((sup) => (
-        <tr key={sup.id}>
-        <td style={{ padding: '12px' }}>{sup.id}</td>
-        <td style={{ padding: '12px' }}>{sup.pid}</td>
-        <td style={{ padding: '12px' }}>{sup.sName}</td>
-        <td style={{ padding: '12px' }}>{sup.cPerson}</td>
-        <td style={{ padding: '12px' }}>{sup.address}</td>
-        <td style={{ padding: '12px' }}>{sup.emailAdd}</td>
-        <td style={{ padding: '12px' }}>{sup.cNumber}</td>
-        <td style={{ padding: '12px' }}>
-            <button style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}>
-            Edit
-            </button>
-            <button style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}>
-            Remove
-            </button>
-        </td>
-        </tr>
-    ))}
-    </tbody>
-          </table>
+          <thead className="text-xs text-white uppercase bg-customBlue">
+                    <tr>
+                    <th scope="col" className="px-6 py-3">PID</th>
+                    <th scope="col" className="px-6 py-3">Project Name</th>
+                    <th scope="col" className="px-6 py-3">Category</th>
+                    <th scope="col" className="px-6 py-3">Location</th>
+                    <th scope="col" className="px-6 py-3">Start Date</th>
+                    <th scope="col" className="px-6 py-3">End Date</th>
+                    <th scope="col" className="px-6 py-3">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {suppliers.map((supplier, index) => (
+                        <tr key={index} className="bg-white border-b">
+                            <td className="px-6 py-4">{supplier.pid}</td>
+                            <td className="px-6 py-4">{supplier.projectName}</td>
+                            <td className="px-6 py-4">{supplier.category}</td>
+                            <td className="px-6 py-4">{supplier.location}</td>
+                            <td className="px-6 py-4">{supplier.startDate}</td>
+                            <td className="px-6 py-4">{supplier.endDate}</td>
+                            <td style={{ padding: '12px' }}>
+                            <button
+                            style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
+                            onClick={() => handleEditClick(supplier, index)}
+                            >
+                            Edit
+                            </button>
+                            <button
+                            style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
+                            onClick={() => handleRemoveClick(index)}
+                            >
+                            Remove
+                            </button>
+                            </td>
+                            
+                            {/* ... other columns ... */}
+                          
+
+                        </tr>
+                        ))}
+                    </tbody>
+                </table>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
+
 export default SuppliersTable;

@@ -70,7 +70,7 @@ import backgroundImage3 from "../assets/contact.png"; // Path to your third imag
             </div>
             
             {/* Login Button - If it navigates to a login page, consider using Link */}
-            <Link to="/">
+            <Link to="/login">
               <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
                 Login
               </button>

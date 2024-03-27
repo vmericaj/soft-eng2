@@ -85,15 +85,20 @@ const AboutUs = () => {
           </div>
           <div className="flex items-center">
             <div className="flex space-x-4">
+              {/* Replace <a> with <Link> and remove href attribute */}
               <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Home</Link>
               <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">About</Link>
               <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Services</Link>
-              <Link to="/portfolio" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
+              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
               <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
             </div>
-            <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
-              Login
-            </button>
+            
+            {/* Login Button - If it navigates to a login page, consider using Link */}
+            <Link to="/login">
+              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
+                Login
+              </button>
+            </Link>
           </div>
         </nav>
       </header>
