@@ -1,21 +1,69 @@
-import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '../assets/se.png';
-import sercondo from '../assets/ser-condo.jpg';
-import serhomes from '../assets/ser-homes.jpg';
-import serpool from '../assets/ser-pool.jpg';
+import sercondo from '../assets/sercondo.jpg';
+import serhomes from '../assets/serhomes.jpg';
+import serpool from '../assets/serpool.jpg';
 import landscapeImage from '../assets/landscape.png';
 import palaceResidencesImage from '../assets/abs.png';
-import poolImage from '../assets/poola.png';
+import poolImage from '../assets/pool.png';
 import aboutHeader from "../assets/header.png";
 
 const Services = () => {
+  // State to control the animation for each service row
+  const [isVisible, setIsVisible] = useState({
+      row1: false,
+      row2: false,
+      row3: false,
+      // Add more rows if needed
+    });
+
+    // Refs for each row to check visibility
+      const rowRefs = {
+        row1: useRef(null),
+        row2: useRef(null),
+        row3: useRef(null),
+        // ... add as many refs as needed
+      };
+     
+      const checkVisibility = (id, ref) => {
+          if (ref.current) {
+            const rect = ref.current.getBoundingClientRect();
+            const isVis = rect.top < window.innerHeight && rect.bottom >= 0;
+            // Update state only if row is visible and wasn't animated before
+            if (isVis && !isVisible[id]) {
+              setIsVisible((prev) => ({ ...prev, [id]: true }));
+            }
+          }
+        };
+
+      useEffect(() => {
+          const handleScroll = () => {
+            checkVisibility('row1', rowRefs.row1);
+            checkVisibility('row2', rowRefs.row2);
+            checkVisibility('row3', rowRefs.row3);
+            // ... do this for as many rows as you have
+          };
+          
+      window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []); // Empty array ensures this effect only runs on mount
+
   // Inline styles
+  const getRowAnimationStyle = (id) => ({
+      opacity: isVisible[id] ? 1 : 0,
+      transform: isVisible[id] ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+      transitionDelay: '0.3s',
+    });
+
   const containerStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '3rem',
+    gap: '5rem',
+    width: '95%',
     marginTop: '1rem', // This will add space between the header image and the grid
+    margin: 'auto',
   };
 
   const boxStyle = {
@@ -28,102 +76,124 @@ const Services = () => {
     background: 'none', // Ensures the gradient is only on hover, not by default
   };
 
-  const boxHoverStyle = {
-    boxShadow: '0 0 15px 5px rgba(0, 123, 255, 0.5), 0 6px 12px 5px rgba(255, 165, 0, 0.5), inset 0 0 15px 5px rgba(0, 123, 255, 0.5), inset 0 0 15px 5px rgba(255, 165, 0, 0.5)', // Glow effect on hover
-    background: 'linear-gradient(135deg, rgba(0, 123, 255, 0.75) 0%, rgba(255, 165, 0, 0.75) 100%)', // Gradient effect on hover
+  const titleStyle = {
+    fontWeight: 'bold', // Bold font weight for the title
+    fontSize: '2rem', // Larger font size for the title
+    marginBottom: '0.5rem', // Space between title and description
+    opacity: '50%',
+    justifyContent: 'center',
   };
-
-  const imageStyle = {
-    width: '100%',
-    height: '100%',
-    borderRadius: '0.5rem',
-    objectfit: 'cover',
-  };
-
-  const sectionHeaderStyle = {
-    fontSize: '1.5rem',
-    color: '#333',
-    marginBottom: '1rem',
-    textAlign: 'center',
+  
+  const descriptionStyle = {
+    textAlign: 'justify', // Justify alignment for the description
+    lineHeight: '1.6', // Line height for better readability
+    fontSize: '20px',
+    justifyContent: 'center',
   };
 
   const rowStyle = {
     display: 'flex',
     marginBottom: '20px',
-    flexdirection: 'column',
+    alignitems: 'flex-start',
+    justifycontent: 'space-between',
   };
 
+  const rowReverseStyle = {
+      ...rowStyle, // This spreads the original row style
+      flexDirection: 'row-reverse', // This will reverse the order of children elements
+    };
+
   const textSectionStyle = {
-    flex: '50%',
-    padding: '60px',
+    flex: '1',
+    padding: '0 60px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    paddingTop: '20px',    
+    paddingBottom: '20px',
   };
 
-  const paragraphStyle = {
-    textAlign: 'justify',
-    lineHeight: '1.58',
-    marginBottom: '1em',
-  };
+  const Line = () => <div style={lineStyle} />;
 
   const lineStyle = {
     height: '2px',
     width: '350px',
     backgroundColor: '#000',
-    margin: '0 auto 20px',
+    margin: '0 -20px 15px',
     opacity: '60%',
-  };
-
-  const verticalLineStyle = {
-    borderLeft: '2px solid black',
-    height: '100px',
-    opacity: '60%',
-  };
+  }
 
   const imageSectionStyle = {
-    flex: '50%',
+    flex: '1',
     position: 'relative',
   };
 
-  const overlayStyle = {
-    position: 'absolute',
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.5)', // Adjust color and opacity to your preference
-    color: 'white',
-    width: '100%',
-    padding: '20px',
-    boxSizing: 'border-box',
-    transition: 'background 0.3s ease-in-out',
-  };
+
+   const overlayTextStyle = {
+      position: 'absolute',
+      bottom: '15%',
+      left: '0',
+      width: '70%', // Overlay should cover the entire width of the image
+      background: 'rgba(48, 36, 23, 0.8)', // Semi-transparent overlay
+      color: 'white',
+      padding: '20px',
+      boxSizing: 'border-box', // Ensure padding does not add to the width
+      display: 'flex',  
+      flexDirection: 'column',  
+      justifyContent: 'flex-end',  
+      alignItems: 'flex-start',
+      height: '40%',
+      boxsizing: 'border-box',
+    };
+
+    const overlayTitleStyle = {
+      fontWeight: 'bold', // Bold font weight for the overlay title
+      fontSize: '1.5rem', // Font size for the overlay title
+      marginBottom: '0.5rem', // Space between overlay title and description
+      opacity: '80%',
+    };
+    
+    const overlayDescriptionStyle = {
+      fontSize: '1rem', // Smaller font size for the description
+      marginBottom: '1rem', // Space between description and button
+      opacity: '80%',
+    };
 
   const readMoreButtonStyle = {
-  background: '#FDA00A', // Adjust button color to your preference
+  background: '#EAE8D7', // Adjust button color to your preference
   border: 'none',
   padding: '10px 20px',
-  color: 'white',
+  color: 'black',
   textDecoration: 'none',
   display: 'inline-block',
   margin: '10px 0',
   cursor: 'pointer',
+  borderRadius: '8px',
+  fontweight: 'bolder',
+  margintop: '1rem',
+  alignself: 'flex-end',
   };
 
-  const mergeStyles = (style, isHovered) => {
-      return isHovered ? {...style, ...boxHoverStyle} : style;
+  // Inline style for the scale-up on hover animation
+    const scaleUpOnHoverStyle = {
+      transform: 'scale(1)',
+      transition: 'transform 0.3s ease-in-out',
+    };
+  
+    const scaleUpEffect = {
+      transform: 'scale(1.05)',
     };
 
-   const [hoverState, setHoverState] = React.useState({ serpool: false, serhomes: false, sercondo: false });
-  
+
   return (
     <div>
       {/* Header Section */}
-            <header className=" shadow-sm w-full rounded-s mt-4 mx-auto max-w-8xl">
+            <header className=" shadow-lg w-full rounded-s mt-4 mx-auto max-w-8xl">
               <nav className="px-6 py-3 flex justify-between items-center w-full">
                 {/* Left side - Logo placeholder */}
                 <div className="flex items-center space-x-2">
                   <img src={logoImage} alt="Logo" className="h-12 w-18" /> {/* Adjust size as needed */}
                   <span className="text-xl font-semibold text-[#FDA00A] ">3MV Construction</span>
-                  
                 </div>
                 {/* Right side - Menu items and Login button */}
                 <div className="flex items-center">
@@ -159,10 +229,10 @@ const Services = () => {
           { name: 'sercondo', image: sercondo, title: 'CONDOMINIUMS' },
         ].map(project => (
           <div
-            style={mergeStyles(boxStyle, hoverState[project.name])}
-            onMouseEnter={() => setHoverState({...hoverState, [project.name]: true})}
-            onMouseLeave={() => setHoverState({...hoverState, [project.name]: false})}
-            key={project.name}
+           key={project.name}
+              style={{ ...boxStyle, ...scaleUpOnHoverStyle }}
+              onMouseEnter={e => e.currentTarget.style.transform = scaleUpEffect.transform}
+              onMouseLeave={e => e.currentTarget.style.transform = scaleUpOnHoverStyle.transform} 
           >
             <img src={project.image} alt={project.title} style={{ width: '100%', height: 'auto' }} />
             <h3 style={{ textAlign: 'center' }}>{project.title}</h3>
@@ -172,77 +242,65 @@ const Services = () => {
 
       {/* Service Rows */}
       {/* First Row: Text Left, Image Right */}
-      <div style={rowStyle}>
+      <div ref={rowRefs.row1} style={{ ...rowStyle, ...getRowAnimationStyle('row1') }}>
         <div style={textSectionStyle}>
-          <div style={lineStyle}></div>
-          <h2 style={sectionHeaderStyle}>Elevate urban living with our condominium construction services.</h2>
-          <p style={paragraphStyle}>
-            The heart of our condominium construction services lies in the delivery...
-          </p>
+           <Line /> {/* Add the line here */}
+          <h2 style={titleStyle}>Elevate urban living with our condominium construction services.</h2>
+          <p style={descriptionStyle}>The heart of our condominium construction services lies in the delivery of exceptional multi-unit residential spaces. We take immense pride in crafting environments that go beyond the ordinary, where each unit is a testament to our dedication to quality and attention to detail. From concept to completion, our team is driven to create living spaces that seamlessly integrate luxury, practicality, and aesthetic appeal.</p>
+          {/* ... other text content ... */}
         </div>
         <div style={imageSectionStyle}>
-          <img src={landscapeImage} alt="Luxury Design" style={imageStyle} />
-          {/* Overlay content to be added here if needed */}
-          <div style={overlayStyle}>
-              {/* Text content */}
-              <h4>Your Project Title</h4>
-              <p>A short description of the project...</p>
-              {/* "Read More" button */}
-              <Link to="/projects" style={readMoreButtonStyle}>
-                Read More
-                </Link>
+          <img src={landscapeImage} alt="Luxury Design" style={{ width: '100%', height: 'auto' }} />
+          {/* Overlay Text */}
+          <div style={overlayTextStyle}>
+            <h4 style={overlayTitleStyle}>The One Palace Residences</h4>
+            <p style={overlayDescriptionStyle}>An architectural masterpiece, blending classic elegance with modern luxury to offer residents a lifestyle of sophistication and comfort.</p>
+            <Link to="/projects" style={readMoreButtonStyle}>
+              READ MORE</Link>
+          </div>
         </div>
       </div>
+
 
       {/* Second Row: Image Left, Text Right */}
-      <div style={rowStyle}>
-        <div style={imageSectionStyle}>
-          <img src={palaceResidencesImage} alt="Palace Residences" style={imageStyle} />
-          {/* Overlay content to be added here if needed */}
-          <div style={overlayStyle}>
-              {/* Text content */}
-              <h2>Your Project Title</h2>
-              <p>A short description of the project...</p>
-              {/* "Read More" button */}
-              <Link to="/projects" style={readMoreButtonStyle}>
-                Read More
-                </Link>
-        </div>
-        <div style={textSectionStyle}>
-          <div style={verticalLineStyle}></div>
-          <h2 style={sectionHeaderStyle}>Dive into Luxury with Our Expertly Crafted Swimming Pools</h2>
-          <p style={paragraphStyle}>
-            Imagine stepping into your backyard and being greeted by a luxurious oasis...
-          </p>
-        </div>
-      </div>
+      <div ref={rowRefs.row2} style={{ ...rowReverseStyle, ...getRowAnimationStyle('row2') }}>
+              <div style={imageSectionStyle}>
+                <img src={palaceResidencesImage} alt="Palace Residences" style={{ width: '100%', height: 'auto' }} />
+                {/* Overlay Text */}
+                <div style={overlayTextStyle}>
+                  <h4 style={overlayTitleStyle}>Your Project Title</h4>
+                  <p>A short description of the project...</p>
+                  <Link to="/projects" style={readMoreButtonStyle}>
+                    READ MORE</Link>
+                </div>
+              </div>
+              <div style={textSectionStyle}>
+                <h2 style={titleStyle}>Dive into Luxury with Our Expertly Crafted Swimming Pools</h2>
+                <p style={descriptionStyle}>Imagine stepping into your backyard and being greeted by a luxurious oasis...</p>
+                {/* ... other text content ... */}
+              </div>
+            </div>  
 
       {/* Third Row: Text Left, Image Right */}
-      <div style={rowStyle}>
-        <div style={textSectionStyle}>
-          <div style={lineStyle}></div>
-          <h2 style={sectionHeaderStyle}>Dive into Luxury with Our Expertly Crafted Swimming Pools</h2>
-          <p style={paragraphStyle}>
-            Imagine stepping into your backyard and being greeted by...
-          </p>
+      <div ref={rowRefs.row3} style={{ ...rowStyle, ...getRowAnimationStyle('row3') }}>
+              <div style={textSectionStyle}>
+                <Line /> {/* Add the line here */}
+                <h2 style={titleStyle}>Elevate urban living with our condominium construction services.</h2>
+                <p style={descriptionStyle}>The heart of our condominium construction services lies in the delivery...</p>
+                {/* ... other text content ... */}
+              </div>
+              <div style={imageSectionStyle}>
+              <img src={poolImage} alt="Swimming Pools" style={{ width: '100%', height: 'auto' }} />
+                {/* Overlay Text */}
+                <div style={overlayTextStyle}>
+                  <h4 style={overlayTitleStyle}>The One Palace Residences</h4>
+                  <p>An architectural masterpiece, blending classic elegance with modern luxury to offer residents a lifestyle of sophistication and comfort.</p>
+                  <Link to="/projects"  style={readMoreButtonStyle}>
+                    READ MORE</Link>
+                </div>
+              </div>
+            </div>
         </div>
-        <div style={imageSectionStyle}>
-          <img src={poolImage} alt="Swimming Pools" style={imageStyle} />
-          {/* Overlay content to be added here if needed */}
-          <div style={overlayStyle}>
-              {/* Text content */}
-              <h2>Your Project Title</h2>
-              <p>A short description of the project...</p>
-              {/* "Read More" button */}
-              <Link to="/projects" style={readMoreButtonStyle}>
-                Read More
-                </Link>
-        </div>
-      </div>
-    </div>
-    </div>
-    </div>
-    </div>
   );
 };
 

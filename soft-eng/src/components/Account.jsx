@@ -117,10 +117,7 @@ const Account = () => {
             <IoPersonSharp className="mr-2" /> 
             CUSTOMERS
             </Link>
-          <Link to="/suppliers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
-            <FaPeopleCarryBox className="mr-2" /> 
-            SUPPLIERS
-            </Link>
+
           <Link to="/employees" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <BsFillPersonVcardFill className="mr-2" /> 
             EMPLOYEES
