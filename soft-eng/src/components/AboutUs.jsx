@@ -6,6 +6,8 @@ import sercondo from '../assets/sercondo.jpg';
 import serhomes from '../assets/serhomes.jpg';
 import serpool from '../assets/serpool.jpg';
 import aboutHeader from "../assets/header.png";
+import PopupChatWindow from './PopupChatWindow';
+
 
 const AboutUs = () => {
   const containerShadowStyle = {
@@ -189,6 +191,7 @@ const AboutUs = () => {
           </motion.div>
         </div>
       </div>
+      <PopupChatWindow/>
     </div>
   );
 };

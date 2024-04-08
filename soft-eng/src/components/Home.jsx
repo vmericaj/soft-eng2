@@ -13,6 +13,8 @@ import yourImageSource from "../assets/BG.jpg";
 import backgroundImage1 from "../assets/pool.png";// Path to your first image
 import backgroundImage2 from "../assets/BG.jpg";// Path to your second image
 import backgroundImage3 from "../assets/contact.png"; // Path to your third image
+import PopupChatWindow from './PopupChatWindow';
+
 
  const images = [backgroundImage1, backgroundImage2, backgroundImage3];
 
@@ -255,11 +257,17 @@ const Slideshow = () => {
         <button className="bg-[#FDA00A] hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
           {buttonText}
         </button>
+
+         
+
       </div>
       <button onClick={nextSlide} className="text-white text-2xl">
         &#10095;
       </button>
+         
+      <PopupChatWindow/>
     </div>
+    
   );
 };
 
