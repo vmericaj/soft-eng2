@@ -131,8 +131,8 @@ const Account = () => {
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
-              <span>Log Out</span>
+          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+              <span>LOGOUT</span>
             </button>
           </div>
         </div>
@@ -145,7 +145,7 @@ const Account = () => {
         <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
         <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
           <VscAccount className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
-          <h1 className="text-xl font-bold text-customBlue dark:text-white">EMPLOYEES</h1> {/* Text */}
+          <h1 className="text-xl font-bold text-customBlue dark:text-white">ACCOUNT</h1> {/* Text */}
         </div>
           <div className="flex items-center space-x-2">
             {/* Search box */}

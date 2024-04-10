@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import logo from "../assets/se.png";
 import { Link } from 'react-router-dom';
 import { TfiDashboard} from "react-icons/tfi";
@@ -7,90 +7,17 @@ import { IoPersonSharp } from "react-icons/io5";
 import { BsFillPersonVcardFill } from "react-icons/bs";
 import { FaPeopleCarryBox } from "react-icons/fa6";
 import { VscAccount } from "react-icons/vsc";
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 // ... other imports ...
 
 const Inventory = () => {
+  const [value, setValue] = React.useState(dayjs());
+
     
-    const [projects, setProjects] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [newProject, setNewProject] = useState({
-      pid: '',
-      projectName: '',
-      category: '',
-      location: '',
-      startDate: '',
-      endDate: '',
-      status: ''
-    });
-    
-    const [isEditing, setIsEditing] = useState(false);
-    const [editIndex, setEditIndex] = useState(-1);
-
-    // ... other functions ...
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewProject({ ...newProject, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (isEditing) {
-          const updatedProjects = projects.map((item, index) => 
-            index === editIndex ? newProject : item
-          );
-          setProjects(updatedProjects);
-          setIsEditing(false);
-        } else {
-          setProjects([...projects, newProject]);
-        }
-        // Reset form and hide it
-        setNewProject({
-          pid: '',
-          projectName: '',
-          category: '',
-          location: '',
-          startDate: '',
-          endDate: '',
-          status: ''
-        });
-        setShowForm(false);
-        setEditIndex(-1); // Reset the edit index
-      };
-      const handleAddProjectClick = () => {
-        setShowForm(true);
-      };
-
-  const handleEditClick = (project, index) => {
-    setNewProject(project);
-    setShowForm(true);
-    setIsEditing(true);
-    setEditIndex(index);
-  };
-
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    let updatedProjects = [...projects];
-    updatedProjects[editIndex] = newProject;
-    setProjects(updatedProjects);
-    setShowForm(false);
-    setNewProject({
-      pid: '',
-      projectName: '',
-      category: '',
-      location: '',
-      startDate: '',
-      endDate: '',
-      status: ''
-    });
-    setIsEditing(false);
-  };
-
-  const handleRemoveClick = (index) => {
-    // Filter out the project at the specific index
-    const updatedProjects = projects.filter((_, projectIndex) => projectIndex !== index);
-    setProjects(updatedProjects);
-  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -134,8 +61,8 @@ const Inventory = () => {
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
-              <span>Log Out</span>
+            <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+              <span>LOGOUT</span>
             </button>
           </div>
         </div>
@@ -161,9 +88,41 @@ const Inventory = () => {
         {/* Main Content */}
         <div className="flex-1 p-6 bg-white overflow-hidden">
           
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          {/* Dashboard */}
+          <div className="p-8 h-80 w-auto items-center justify-center row-span-2 col-span-1 lg:col-span-2 flex overflow-hidden">
+          <div >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateCalendar
+                value={value}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+              />
+            </LocalizationProvider>
+            </div>
+          </div>
           
+          {/* Projects */}
+          <div className="bg-customBlue rounded-xl shadow-lg p-4 h-42 flex justify-center items-center">
+          <MdInventory2 className="text-4xl text-white" />
+          </div>
 
+          {/* New Box Below Projects */}
+          <div className="bg-customOrange rounded-xl shadow-lg p-4 h-42 flex justify-center items-center">
+          <IoPersonSharp className="text-4xl text-white" />
+          </div>
+          {/* Employees */}
+          <div className="bg-customOrange rounded-xl shadow-lg p-4 h-39 flex justify-center items-center">
+          <BsFillPersonVcardFill className="text-4xl text-white" />
+          </div>
 
+          {/* Account */}
+          <div className="bg-customBlue rounded-xl shadow-lg p-4 h-38 flex justify-center items-center">
+          <VscAccount className="text-4xl text-white" />
+          </div>
+        </div>
+        
 
 
   

@@ -315,8 +315,8 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
-              <span>Log Out</span>
+          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+              <span>LOGOUT</span>
             </button>
           </div>
         </div>
