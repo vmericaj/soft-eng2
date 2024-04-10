@@ -1,0 +1,129 @@
+/* Projects.css */
+.project-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 3rem;
+  }
+  
+  .project-card {
+    position: relative;
+    margin: 30px; /* Adjust as needed */
+    overflow: visible;
+  }
+  
+  .project-card:hover  {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+    opacity: 1;    
+    visibility: visible;
+  }
+  
+  .project-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .project-title-overlay {
+  position: absolute;
+  bottom: 120px; /* Adjust as needed */
+  left: 0;
+  width: 70%;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 2;
+  background-color: #302417;/* Semi-transparent black background */
+  opacity: 80%;
+  transition: background-color 0.3s; /* Smooth transition for background */
+  }
+  
+  .project-title {
+   margin: 0;  
+   font-size: 18px; /* Adjust as needed */   
+   background-color: rgba(56, 50, 50, 0);
+   color: whitesmoke;
+   display: inline; /* Make the title inline to fit content */
+   font-weight: bolder;
+  }
+  
+  .toggle-details-button {
+    background: none;
+    border: none;
+    color: white; /* Adjust if you want a different color for the icon */
+    cursor: pointer;
+    font-size: 18px; /* Adjust to scale the icon */
+    display: inline-flex; /* Make the button inline-flex to stay next to the title */
+    align-items: left;
+    margin-left: 10px; /* Add some space between the title and the button */
+    transition: transform 0.3s ease; /* Smooth rotation transition */
+  }
+
+.project-details-overlay {
+  position: absolute;
+  top: 85.7%; /* Overlay on top of the whole image */
+  left: -15px;
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+  justify-content: left;
+  align-items: center;
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0); /* More opaque background for details */
+  transform: translateX(-100%); /* Initially position below the title bar */  
+ overflow: hidden; /* Ensure the expanding content does not alter layout */  
+ max-height: 90%; /* Start with max-height 0 to hide the content */  
+ transition: transform 0.5s ease-out, opacity 0.5s ease, visibility 0s linear 0.3s; /* Adjust timing for effect */
+ opacity: 0; /* Start with an opacity of 0 to be fully transparent */
+ padding: 0 1rem; /* Padding for content */
+ visibility: hidden;
+}
+
+.project-details-visible {
+  transform: translateX(0%); /* Slide into natural position */
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.5s ease-out, opacity 0.5s ease, visibility 0s; /* Adjust timing for effect */
+}
+
+.show-details {
+  transform: scaleY(1);
+  height: auto; /* Adjust height as needed, or leave it auto */
+  padding: 1rem; /* Padding for when details are shown */
+}
+
+.project-details {
+    color: azure;
+    font-size: 12px;
+    text-align: left;
+}
+
+  .details-arrow {
+    color: whitesmoke; /* or any color you want */
+  font-size: 20px; /* adjust the size as needed */
+  margin-left: -50px;
+  }
+  
+  .project-details p {
+    padding: 18px; 
+    font-size: 13px;
+     text-align: left;
+    color: azure;
+     background-color: #302417; /* More opaque background for details */
+     opacity: 80%;
+  }
+  
+  .highlight {
+    color: #FDA00A; /* Orange color */
+    font-weight: bold; /* Make the text bold */
+  }
+
+ .toggle-details-button.rotate {
+     transform: rotate(180deg);
+ } 
+  
