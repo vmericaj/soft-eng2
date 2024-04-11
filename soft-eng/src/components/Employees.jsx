@@ -9,9 +9,47 @@ import { VscAccount } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import { MdNotificationsActive } from "react-icons/md";
 import moment from 'moment';
-
-
+import { MdOutlineMail } from "react-icons/md";
+import { MdOutlinePhoneInTalk } from "react-icons/md";
+import { VscTypeHierarchySuper } from 'react-icons/vsc'; // Import icon for department
+import { FaRegIdBadge } from 'react-icons/fa';
 // ... other imports ...
+
+// Define InfoCard component inside your Employees component
+const InfoCard = ({ project, onEdit, onRemove }) => {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex items-center" style={{ maxWidth: '560px' }}>
+      {/* Image container */}
+      {project.image && (
+        <img src={URL.createObjectURL(project.image)} alt="Profile" className="w-24 h-35 rounded  object-cover mr-4" />
+      )}
+      {/* Text container */}
+      <div className="flex-grow">
+        <div className="text-lg font-bold">{project.name}</div>
+        <div className="text-md">{project.position}</div>
+        <ul className="my-1 space x-1 text-[0.75rem]">
+          <li className="flex items-center"><VscTypeHierarchySuper className="mr-1" /> {project.department}</li>
+          <li className="flex items-center"><FaRegIdBadge className="mr-1" /> {project.eid}</li>
+        </ul>
+        <div className="flex items-center text-[0.75rem]">
+          <MdOutlineMail className="mr-1" /> {/* Email icon */}
+          <span>{project.email}</span>
+        </div>
+        <div className="flex items-center text-[0.75rem]">
+          <MdOutlinePhoneInTalk className="mr-1" /> {/* Email icon */}
+          <span>{project.number}</span>
+        </div>
+      </div>
+      {/* Action buttons */}
+      <div className="flex flex-col ml-4">
+        <button onClick={onEdit} className="text-sm bg-customBlue text-white px-2 py-1 rounded mb-2">Edit</button>
+        <button onClick={onRemove} className="text-sm bg-red-700 text-white px-2 py-1 rounded">Remove</button>
+      </div>
+    </div>
+  );
+};
+
+
 
 const Employees = () => {
     
@@ -110,6 +148,7 @@ const Employees = () => {
       };
       setNotifications([...notifications, newNotification]);
     };
+
     const handleSubmit = (e) => {
       e.preventDefault();
       let successMessage = '';
@@ -136,22 +175,31 @@ const Employees = () => {
       createNotification(successMessage);
       setShowSuccessAlert(true);
       setTimeout(() => setShowSuccessAlert(false), 3000);
-  
-      setNewProject({
-        eid: '',
-        name: '',
-        position: '',
-        department: '',
-        email: '',
-        number: '',
-        attachment: '',
-        action: ''
-    });
-      setShowForm(false);
-      setEditIndex(-1); // Reset the edit index
-      setImage(null); 
-  };
-  
+
+      const submittedProject = {
+            ...newProject,
+            image: image,
+            id: Date.now(), // using the timestamp as an ID
+        };
+
+        setProjects([...projects, submittedProject]);
+        setShowSuccessAlert(true);
+        setSuccessMessage(`Successfully added the project '${newProject.name}'.`);
+        setTimeout(() => setShowSuccessAlert(false), 3000);
+        setShowForm(false);
+        setNewProject({
+            eid: '',
+            name: '',
+            position: '',
+            department: '',
+            email: '',
+            number: '',
+            attachment: '',
+            action: ''
+        });
+        setImage(null);
+    };
+
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
         setCurrentAction('add');
@@ -322,8 +370,8 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center justify-center w-full px-4 py-2 text-gray-600 bg-red-400 rounded-md hover:bg-red-300 hover:text-white">
-              <span>Log Out</span>
+          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+              <span>LOGOUT</span>
             </button>
           </div>
         </div>
@@ -481,48 +529,45 @@ const filteredProjects = getFilteredProjects();
             {/* Wrap each input with a div and apply a consistent width */}
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="eid" className="block text-gray-700 text-sm font-bold mb-2">EMPLOYEE ID</label>
-                <input type="text"id="eid" name="eid" value={newProject.cid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text"id="eid" name="eid" value={newProject.eid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
-
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">FULL NAME</label>
                 <input type="text" id="name" name="name" value={newProject.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
-                <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
-                <input type="text" id="number" name="number" value={newProject.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
-            </div>
-
-            <div className="px-2 w-full md:w-1/2">
-                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL ADDRESS</label>
-                <input type="text" id="email" name="email" value={newProject.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
-            </div>
-
-            <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="position" className="block text-gray-700 text-sm font-bold mb-2">POSITION</label>
-                <input type="text" id="position" name="position" value={newProject.project} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="position" name="position" value={newProject.position} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+            </div>
+
+            <div className="px-2 w-full md:w-1/2">
+                <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">DEPARTMENT</label>
+                <input type="text" id="department" name="department" value={newProject.department} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+            </div>
+
+            <div className="px-2 w-full md:w-1/2">
+                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL</label>
+                <input type="text" id="email" name="email" value={newProject.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
            
 
             <div className="px-2 w-full md:w-1/2">
-                <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">DEPARTMENT</label>
-                <input type="text" id="department" name="department" value={newProject.total} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
+                <input type="text" id="number" name="number" value={newProject.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full">
-    <label htmlFor="imageUpload" className="block text-gray-700 text-sm font-bold mb-2">Attach Picture</label>
-    <input type="file" id="imageUpload" name="imageUpload" accept="image/*" 
-           className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-           onChange={handleImageChange} />
+            <label htmlFor="imageUpload" className="block text-gray-700 text-sm font-bold mb-2">Attach Picture</label>
+            <input type="file" id="imageUpload" name="imageUpload" accept="image/*" 
+                  className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                onChange={handleImageChange} />
 </div>
 {image && (
     <div className="px-2 w-full py-4">
         <img src={URL.createObjectURL(image)} alt="Preview" className="max-w-xs" />
     </div>
 )}
-
-
         </div>
 
         {/* Save and Cancel buttons */}
@@ -538,57 +583,18 @@ const filteredProjects = getFilteredProjects();
 </div>
 </div>
 )}
+<div className="flex flex-wrap -m-2">
+          {projects.map((project, index) => (
+            <div key={project.id} className="p-2" style={{ flexBasis: 'calc(50% - 1rem)' }}>
+              <InfoCard
+                project={project}
+                onEdit={() => handleEditClick(project, index)}
+                onRemove={() => handleRemoveClick(index)}
+              />
+            </div>
+          ))}
+        </div>
 
-          {/* Table to display the projects */}
-          {/* ... table ... */}
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-white uppercase bg-customBlue">
-                    <tr>
-                    <th scope="col" className="px-6 py-3">CID</th>
-                    <th scope="col" className="px-6 py-3">Customer Name</th>
-                    <th scope="col" className="px-6 py-3">Number</th>
-                    <th scope="col" className="px-6 py-3">Email</th>
-                    <th scope="col" className="px-6 py-3">Project</th>
-                    <th scope="col" className="px-6 py-3">Category</th>
-                    <th scope="col" className="px-6 py-3">Total</th>
-                    <th scope="col" className="px-6 py-3">Paid</th>
-                    <th scope="col" className="px-6 py-3">Balance</th>
-                    <th scope="col" className="px-6 py-3">Action</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filteredProjects.map((project, index) => (
-                                    <tr key={index} className={Object.values(project).some(attribute => String(attribute).toLowerCase().includes(searchTerm.toLowerCase())) ? 'bg-white text-black' : 'bg-white'}>
-                                        <td className="px-6 py-4">{project.cid}</td>
-                            <td className="px-6 py-4">{project.name}</td>
-                            <td className="px-6 py-4">{project.number}</td>
-                            <td className="px-6 py-4">{project.email}</td>
-                            <td className="px-6 py-4">{project.project}</td>
-                            <td className="px-6 py-4">{project.category}</td>
-                            <td className="px-6 py-4">{project.total}</td>
-                            <td className="px-6 py-4">{project.paid}</td>
-                            <td className="px-6 py-4">{project.balance}</td>
-                            <td style={{ padding: '12px' }}>
-                            <button
-                            style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleEditClick(project, index)}
-                            >
-                            Edit
-                            </button>
-                            <button
-                            style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleRemoveClick(index)}
-                            >
-                            Remove
-                            </button>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
-          </div>
         </div>
       </div>
     </div>
