@@ -78,12 +78,12 @@ const Login = () => {
           </div>
           
           {/* Include other form elements here */}
-          <button
-            type="submit"
+          <Link
+            to="/inventory" // Replace "/your-target-path" with the actual path you want to navigate to
             className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-[#EF9400] bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             LOG IN
-          </button>
+          </Link>
           {/* Include other buttons or links here */}
           <div className="flex flex-col items-center space-y-6 mx-auto w-96">
                 {/* Separator with text */}
