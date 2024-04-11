@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import logoImage from '../assets/se.png';
 import sercondo from '../assets/sercondo.jpg';
 import serhomes from '../assets/serhomes.jpg';
-import serpool from '../assets/serpool.jpg';
+import serpool from '../assets/2.png';
+import serwater from '../assets/plazuela.jpg';
 import landscapeImage from '../assets/landscape.png';
 import palaceResidencesImage from '../assets/abs.png';
 import poolImage from '../assets/pool.png';
 import aboutHeader from "../assets/header.png";
+import PopupChatWindow from './PopupChatWindow';
+
 
 const Services = () => {
   // State to control the animation for each service row
@@ -60,7 +63,8 @@ const Services = () => {
   const containerStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '5rem',
+    rowGap: '0rem',
+    gap: '3rem',
     width: '95%',
     marginTop: '1rem', // This will add space between the header image and the grid
     margin: 'auto',
@@ -70,7 +74,7 @@ const Services = () => {
     boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.3), 0 6px 12px -2px rgba(0, 0, 0, 0.05)',
     borderRadius: '0.8rem',
     border: '4px solid transparent',
-    margin: '3.5rem auto',
+    margin: '2rem auto',
     overflow: 'hidden', // Ensures the image doesn't break the border radius
     transition: 'box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out',// Smooth transition for the shadow
     background: 'none', // Ensures the gradient is only on hover, not by default
@@ -226,7 +230,10 @@ const Services = () => {
         {[
           { name: 'serpool', image: serpool, title: 'SWIMMING POOLS' },
           { name: 'serhomes', image: serhomes, title: 'HOMES' },
-          { name: 'sercondo', image: sercondo, title: 'CONDOMINIUMS' },
+          { name: 'sercondo', image: serwater, title: 'WATER FEATURES' },
+          { name: 'sercondo', image: sercondo, title: 'LANDSCAPING AND HARDSCAPING' },
+          { name: 'sercondo', image: sercondo, title: 'SPA AND SAUNA' },
+          { name: 'sercondo', image: sercondo, title: 'PAINTING WORKS' },
         ].map(project => (
           <div
            key={project.name}
@@ -300,6 +307,7 @@ const Services = () => {
                 </div>
               </div>
             </div>
+            <PopupChatWindow/>
         </div>
   );
 };

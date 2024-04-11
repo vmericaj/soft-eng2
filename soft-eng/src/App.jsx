@@ -1,9 +1,4 @@
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import Logo from './components/Logo';
-
-import Dropdown from './components/Dropdown';
-
 import CustomersTable from './components/CustomersTable';
 import SuppliersTable from './components/SuppliersTable';
 import HomePage from './components/HomePage';
@@ -13,37 +8,30 @@ import Home from './components/Home';
 import Sample from './components/Sample';
 import Navbar from './components/Navbar';
 import Services from './components/Services';
-
+import Project from './components/Projects';
 import Contact from './components/Contact';
 import Slideshow from './components/Slideshow';
 import MapContainer from './components/MapContainer';
 import Login from './components/Login';
 import ContactForm from './components/ContactForm';
 import GolfClubBanner from './components/GolfClubBanner';
-import Form from './components/Form';
-import Login1 from './components/Login';
 import SignUp from './components/SignUp';
 import CreateAccount from './components/CreateAccount';
-import Form1 from './Form1';
-import Table from './Table';
-import Table1 from './Table1';
 import ProjectTable from './components/ProjectTable';
 import Inventory from './components/Inventory';
 import Account from './components/Account';
 import Employees from './components/Employees';
-import Notification from './components/Notification';
 
 
 function App() {
   return (
 <Router>
       <Routes>
-        <Route path="/" element={<Inventory />} />
-        <Route path="/projects" element={<ProjectTable />} />
-        <Route path="/customers" element={<CustomersTable />} />
-        <Route path="/suppliers" element={<SuppliersTable />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/account" element={<Account/>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutUs/>}/>
+        <Route path="/services" element={<Services/>}/>
+        <Route path="/projects" element={<Project/>}/>
+        <Route path="/Contact" element={<Contact/>}/>
       </Routes>
     </Router>
   );

@@ -11,7 +11,7 @@ import image6 from '../assets/image6.png';
 import aboutHeader from "../assets/header.png";
 import './Projects.css'; 
 import { IoIosArrowDropdownCircle } from "react-icons/io";
-//import PopupChatWindow from './PopupChatWindow';
+import PopupChatWindow from './PopupChatWindow';
 
 const projectData = [
   {
@@ -149,7 +149,7 @@ const Project = () => {
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
-      
+        <PopupChatWindow/>
     </div>
   );
 };
@@ -166,4 +166,6 @@ ProjectCard.propTypes = {
   }).isRequired,
 };
 
+
+  <div><PopupChatWindow/></div>
 export default Project; 

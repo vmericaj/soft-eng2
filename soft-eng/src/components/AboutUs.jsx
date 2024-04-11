@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
-import sercondo from '../assets/sercondo.jpg';
-import serhomes from '../assets/serhomes.jpg';
-import serpool from '../assets/serpool.jpg';
-import aboutHeader from "../assets/header.png";
+import sercondo from '../assets/1.png';
+import serhomes from '../assets/7.png';
+import serpool from '../assets/3.png';
+import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
 
 
@@ -123,7 +123,12 @@ const AboutUs = () => {
           <img src={sercondo} alt="Condo" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverCondo ? hoverTextStyle : null}>
-              3MV Construction is not just a construction company; it is a partner in reshaping urban living through thoughtful condominium design, impeccable construction, and ongoing maintenance.
+            3MV Construction is a company in the Philippines that
+            specializes in designing and building different types of Swimming Pools and water
+            features such as fountains, ponds, artificial waterfalls, spa and the likes. We also
+            design, build and renovate quality and sustainable yet affordable houses, offices,
+            and condominium units. We also accept land development projects such as
+            resorts, commercial spaces, townhouses, subdivisions and farms.
             </p>
           </div>
         </div>
@@ -136,7 +141,12 @@ const AboutUs = () => {
           <img src={serhomes} alt="Homes" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverHomes ? hoverTextStyle : null}>
-              Our commitment to excellence is woven into every aspect of our work, ensuring that each home we touch becomes a testament to our dedication to quality, innovation, and client satisfaction.
+            Our expanded products adapt to a bigger market and meets the standards and
+            qualifications of different kinds of establishments like hotels, malls, offices, resorts,
+            residences to name a few. We develop and improve Water Technology in order to
+            incorporate recreational, relaxation and health beneficial technologies. We also
+            cater House construction and renovation and other architectural masonry works—
+            landscaping, hardscaping and softscaping.
             </p>
           </div>
         </div>
@@ -149,7 +159,9 @@ const AboutUs = () => {
           <img src={serpool} alt="Pool" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverPool ? hoverTextStyle : null}>
-              Whether you seek a tranquil retreat or a vibrant entertainment space, 3MV Construction is your trusted partner in transforming aquatic aspirations into breathtaking realities.
+            Quality, creativeness, comfort and value for money are the key inspirations and
+            goals of 3MV Construction. We work attentively with our clients’ perspective and
+            we meticulously apply our concept in order to come up with the agreed design.
             </p>
           </div>
         </div>

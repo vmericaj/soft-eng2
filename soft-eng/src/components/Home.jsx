@@ -134,7 +134,7 @@ import PopupChatWindow from './PopupChatWindow';
             className="h-18 w-16 mx-auto"
           />
           <p className={`text-lg mt-4 text-center ${hover1 ? 'text-white' : 'text-[#FDA00A]'}`}>
-            Homes
+            Water Features
           </p>
           <p className={`text-sm mt-4 text-center ${hover1 ? 'text-white' : 'text-[#A29D9D]'}`}>
           We stand ready to turn your vision into a living reality. Our home construction services 
@@ -176,7 +176,7 @@ import PopupChatWindow from './PopupChatWindow';
             className="h-10 w-12 mx-auto"
           />
           <p className={`text-lg mt-4 text-center ${hover3 ? 'text-white' : 'text-[#FDA00A]'}`}>
-            Condominiums
+            Construction 
           </p>
           <p className={`text-sm mt-4 text-center ${hover3 ? 'text-white' : 'text-[#A29D9D]'}`}>
           From concept to completion, our team is driven to create living spaces that seamlessly 
