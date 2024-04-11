@@ -61,9 +61,12 @@ const Inventory = () => {
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-              <span>LOGOUT</span>
-            </button>
+          <Link
+            to="/"  // Change "/logout" to your desired path
+            className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white"
+          >
+            <span>LOGOUT</span>
+          </Link>
           </div>
         </div>
       </div>
@@ -122,10 +125,6 @@ const Inventory = () => {
           <VscAccount className="text-4xl text-white" />
           </div>
         </div>
-        
-
-
-  
         </div>
       </div>
     </div>
