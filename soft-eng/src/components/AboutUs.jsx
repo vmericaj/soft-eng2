@@ -7,6 +7,7 @@ import serhomes from '../assets/serhomes.jpg';
 import serpool from '../assets/serpool.jpg';
 import aboutHeader from "../assets/header.png";
 import PopupChatWindow from './PopupChatWindow';
+import Footer from './Footer';
 
 const AboutUs = () => {
   const containerShadowStyle = {
@@ -191,6 +192,7 @@ const AboutUs = () => {
         </div>
       </div>
       <PopupChatWindow/>
+      <Footer/>
     </div>
   );
 };

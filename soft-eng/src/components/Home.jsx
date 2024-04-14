@@ -194,7 +194,7 @@ import Footer from './Footer';
     <h2 className="text-4xl font-bold text-[#FDA00A] mt-4">Elevating Lifestyles with Precision and Elegance</h2>
     <h3 className="text-xl font-semibold">Transforming Spaces into Sanctuaries</h3>
     <p className="text-md text-gray-700">
-  At <span style={{ fontWeight: 'bold' }}>3MV Construction</span>, we're more than just builders; we are architects of comfort and style. Our services go beyond mere construction—we create environments that enhance your quality of life. Specializing in elegant water features and sophisticated outdoor spaces, we ensure every project reflects our commitment to excellence and precision.
+  At <span style={{ fontWeight: 'bold' }}>3MV Construction</span>, we<span>'</span>re more than just builders; we are architects of comfort and style. Our services go beyond mere construction—we create environments that enhance your quality of life. Specializing in elegant water features and sophisticated outdoor spaces, we ensure every project reflects our commitment to excellence and precision.
   <br /><br />
   <span style={{ fontWeight: 'bold' }}>Elegant Water Features:</span> From serene ponds to dynamic fountains, our designs bring a sense of tranquility and sophistication to your doorstep.
   <br /><br />
@@ -209,70 +209,9 @@ import Footer from './Footer';
 
   </div>
   </div>
-
-
-
-      {/* Space between containers and slideshow */}
-      <div className="mt-8" />
-
-      {/* Slideshow */}
-      <div>
-        <Slideshow />
-      </div>
-    </div>
-  );
-};
-
-const Slideshow = () => {
-  const [current, setCurrent] = useState(0);
-
-  const slides = [
-    {
-      title: "The One Palace Residences",
-      description: "A luxurious condominium set to redefine modern living in the heart of Bulacan.",
-      buttonText: "Show Case",
-    },
-    {
-      title: "Serene Haven Homes",
-      description: "Serene Haven Homes is a residential development project focused on creating a tranquil and sustainable living environment.",
-      buttonText: "Show Case",
-    },
-    {
-      title: "Crystal Lagoon Retreat",
-      description: "The Crystal Lagoon Retreat will be strategically located in the scenic suburb of Antipolo, Rizal.",
-      buttonText: "Show Case",
-    },
-    
-  ];
-
-  const nextSlide = () => setCurrent((current + 1) % slides.length);
-  const prevSlide = () => setCurrent((current - 1 + slides.length) % slides.length);
-
-  const { title, description, buttonText } = slides[current];
-
-  return (
-    <div className="flex items-center justify-center p-6 space-x-4 w-full rounded-2xl mt-6 mx-auto max-w-[92%]"
-         style={{
-           background: "linear-gradient(to right, #FDA00A, #0F076D)",
-           color: "white"
-         }}>
-      <button onClick={prevSlide} className="text-white text-2xl hover:scale-110 active:scale-75 transition-transform">
-        &#10094;
-      </button>
-      <div className="text-center">
-        <h2 className="text-3xl font-bold">{title}</h2>
-        <p className="my-4">{description}</p>
-        <button className="bg-[#FDA00A] hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-          {buttonText}
-        </button>
-      </div>
-      <button onClick={nextSlide} className="text-white text-2xl hover:scale-110 active:scale-75 transition-transform">
-        &#10095;
-      </button>
-      <div>
       <PopupChatWindow/>
+      <Footer/>
       </div>
-    </div>
     
   );
 };
