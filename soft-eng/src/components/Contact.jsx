@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import backgroundImage from "../assets/BG.jpg"; // Make sure to replace with the path to your actual image
+import backgroundImage from "../assets/29a.png"; // Make sure to replace with the path to your actual image
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
 import poolIcon from "../assets/iconp.png";
@@ -102,6 +102,7 @@ const Contact = () => {
         </form>
       </div>
       <div className="hidden md:block md:w-1/2 rounded-lg" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}></div>
+
     </div>
         
     </div>

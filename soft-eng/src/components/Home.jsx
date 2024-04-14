@@ -1,6 +1,5 @@
 import { useState , useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import backgroundImage from "../assets/BG.jpg";
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
 import poolIcon from "../assets/iconp.png";
@@ -9,7 +8,6 @@ import condoIcon from "../assets/iconc.png";
 import poolIconHover from "../assets/iconph.png";
 import houseIconHover from "../assets/iconhh.png";
 import condoIconHover from "../assets/iconch.png";
-import yourImageSource from "../assets/BG.jpg";
 import newImage1 from "../assets/newImage1.jpg";
 import newImage2 from "../assets/newImage2.jpg";
 import newImage3 from "../assets/newImage3.jpg";
@@ -194,7 +192,7 @@ import Footer from './Footer';
     <h2 className="text-4xl font-bold text-[#FDA00A] mt-4">Elevating Lifestyles with Precision and Elegance</h2>
     <h3 className="text-xl font-semibold">Transforming Spaces into Sanctuaries</h3>
     <p className="text-md text-gray-700">
-  At <span style={{ fontWeight: 'bold' }}>3MV Construction</span>, we<span>'</span>re more than just builders; we are architects of comfort and style. Our services go beyond mere construction—we create environments that enhance your quality of life. Specializing in elegant water features and sophisticated outdoor spaces, we ensure every project reflects our commitment to excellence and precision.
+  At <span style={{ fontWeight: 'bold' }}>3MV Construction</span>, were more than just builders; we are architects of comfort and style. Our services go beyond mere construction—we create environments that enhance your quality of life. Specializing in elegant water features and sophisticated outdoor spaces, we ensure every project reflects our commitment to excellence and precision.
   <br /><br />
   <span style={{ fontWeight: 'bold' }}>Elegant Water Features:</span> From serene ponds to dynamic fountains, our designs bring a sense of tranquility and sophistication to your doorstep.
   <br /><br />
@@ -209,11 +207,15 @@ import Footer from './Footer';
 
   </div>
   </div>
-      <PopupChatWindow/>
-      <Footer/>
-      </div>
-    
+<PopupChatWindow/>
+<Footer/>
+
+
+      
+    </div>
   );
 };
 
+    
+ 
 export default Home;
