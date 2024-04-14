@@ -12,6 +12,10 @@ import Services from './components/Services';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Slideshow from './components/Slideshow';
+<<<<<<< HEAD
+import MapContainer from './components/MapContainer';
+=======
+>>>>>>> a0a5a825046cbc6703679c1ce0ca5239f5058576
 import Login from './components/Login';
 import ContactForm from './components/ContactForm';
 import GolfClubBanner from './components/GolfClubBanner';
@@ -29,6 +33,7 @@ function App() {
   return (
     <Router>
       <Routes>
+<<<<<<< HEAD
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/services" element={<Services />} />
@@ -37,12 +42,20 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/inventory" element={<Inventory />} />
+       <Route path="/projects" element={<ProjectTable />} />
+       <Route path="/customers" element={<CustomersTable />} />
+       <Route path="/suppliers" element={<SuppliersTable />} />
+       <Route path="/employees" element={<Employees />} />
+       <Route path="/account" element={<Account/>} />
+
+=======
+        <Route path="/" element={<Inventory />} />
         <Route path="/projects" element={<ProjectTable />} />
         <Route path="/customers" element={<CustomersTable />} />
         <Route path="/suppliers" element={<SuppliersTable />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/account" element={<Account/>} />
-
+>>>>>>> a0a5a825046cbc6703679c1ce0ca5239f5058576
       </Routes>
     </Router>
   );
