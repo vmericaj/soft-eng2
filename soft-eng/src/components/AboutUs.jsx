@@ -6,6 +6,7 @@ import sercondo from '../assets/sercondo.jpg';
 import serhomes from '../assets/serhomes.jpg';
 import serpool from '../assets/serpool.jpg';
 import aboutHeader from "../assets/header.png";
+import PopupChatWindow from './PopupChatWindow';
 
 const AboutUs = () => {
   const containerShadowStyle = {
@@ -86,16 +87,16 @@ const AboutUs = () => {
           <div className="flex items-center">
             <div className="flex space-x-4">
               {/* Replace <a> with <Link> and remove href attribute */}
-              <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-              <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">About</Link>
-              <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Services</Link>
-              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
-              <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
+              <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
+              <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
+              <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
+              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
+              <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
             </div>
             
             {/* Login Button - If it navigates to a login page, consider using Link */}
             <Link to="/login">
-              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
+              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300 hover:scale-110 active:scale-75 transition-transform">
                 Login
               </button>
             </Link>
@@ -164,7 +165,7 @@ const AboutUs = () => {
             animate={{ opacity: showMission ? 1 : 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p style={textStyle}c>
+            <p style={textStyle}>
               At 3MV Construction, our mission is to be the beacon of excellence in the construction industry, dedicated to transforming dreams into enduring structures. We are committed to delivering innovative, sustainable, and high-quality solutions, driven by a passion for precision and an unwavering commitment to client satisfaction. Through a fusion of expertise, integrity, and cutting-edge practices, we aim to build not just structures but legacies that stand the test of time.
             </p>
           </motion.div>
@@ -189,6 +190,7 @@ const AboutUs = () => {
           </motion.div>
         </div>
       </div>
+      <PopupChatWindow/>
     </div>
   );
 };
