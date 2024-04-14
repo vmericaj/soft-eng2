@@ -212,72 +212,12 @@ import Footer from './Footer';
 
 
 
-      {/* Space between containers and slideshow */}
-      <div className="mt-8" />
-
-      {/* Slideshow */}
-      <div>
-        <Slideshow />
-      </div>
+      
     </div>
   );
 };
 
-const Slideshow = () => {
-  const [current, setCurrent] = useState(0);
-
-  const slides = [
-    {
-      title: "The One Palace Residences",
-      description: "A luxurious condominium set to redefine modern living in the heart of Bulacan.",
-      buttonText: "Show Case",
-    },
-    {
-      title: "Serene Haven Homes",
-      description: "Serene Haven Homes is a residential development project focused on creating a tranquil and sustainable living environment.",
-      buttonText: "Show Case",
-    },
-    {
-      title: "Crystal Lagoon Retreat",
-      description: "The Crystal Lagoon Retreat will be strategically located in the scenic suburb of Antipolo, Rizal.",
-      buttonText: "Show Case",
-    },
+c
     
-  ];
-
-  const nextSlide = () => setCurrent((current + 1) % slides.length);
-  const prevSlide = () => setCurrent((current - 1 + slides.length) % slides.length);
-
-  const { title, description, buttonText } = slides[current];
-
-  return (
-    <div className="flex items-center justify-center p-6 space-x-4 w-full rounded-2xl mt-6 mx-auto max-w-[92%]"
-         style={{
-           background: "linear-gradient(to right, #FDA00A, #0F076D)",
-           color: "white"
-         }}>
-      <button onClick={prevSlide} className="text-white text-2xl hover:scale-110 active:scale-75 transition-transform">
-        &#10094;
-      </button>
-      <div className="text-center">
-        <h2 className="text-3xl font-bold">{title}</h2>
-        <p className="my-4">{description}</p>
-        <button className="bg-[#FDA00A] hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-          {buttonText}
-        </button>
-
-         
-
-      </div>
-      <button onClick={nextSlide} className="text-white text-2xl hover:scale-110 active:scale-75 transition-transform">
-        &#10095;
-      </button>
-      <div>
-      <PopupChatWindow/>
-      </div>
-    </div>
-    
-  );
-};
-
+ 
 export default Home;

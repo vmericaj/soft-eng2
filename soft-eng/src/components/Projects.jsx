@@ -38,37 +38,10 @@ const projectData = [
   {id: 4, name: 'PRIVATE CONDOMINIUM UNIT', image: image4, location:'Skyline Premier One Balete, Balete Drive, Quezon City', scope: 'Condominium Renovation and Retrofitting',},
   {id: 5, name: 'VINTAGE RESTAURANT', image: image5, location:'Mandaluyong City',  scope: 'Restaurant Renovation and Retrofitting',},
   {id: 6, name: 'MOLDEX REALTY INC', image: image6, location:'Golden Empire Tower, 1322 Roxas Blvd. Ermita, Manila', scope: 'Modern Condominium Unit Renovation',},
-
-  {
-    id: 7,
-    name: 'DEWI SRI FRM AND RESORT',
-    image: image7,
-    location: 'Pila, Laguna',
-    scope: 'Design and Build of Swimming Pool with Bubbler',
-  },
-
-  {
-    id: 8,
-    name: 'ADAPON-SAJO RESIDENCE',
-    image: image8,
-    location: 'Muntinlupa, City ',
-    scope: 'Design and Build of Infinity Pool with Water Feature',
-  },
-
-  {
-    id: 9,
-    name: 'PRIVATE RESORT',
-    image: image9,
-    location: 'Morong, Bataan',
-    scope: 'Design and Build of Swimming Pool with Jacuzzi',
-  },
-
-  {
-    id: 10,
-    name: 'LASAM RESIDENCE',
-    image: image10,
-    location: 'Xavierville Village, Quezon City',
-    scope: 'Design and Build of Swimming Pool with Water Feature',
+  {id: 7, name: 'DEWI SRI FRM AND RESORT', image: image7, location: 'Pila, Laguna', scope: 'Design and Build of Swimming Pool with Bubbler',},
+  {id: 8, name: 'THE SIGNATURE',image: image8,location: 'Quezon City ',scope: 'Construction of Swimming Pool (Kiddie, Lap & Wading)',},
+  { id: 9, name: 'PRIVATE RESORT', image: image9, location: 'Morong, Bataan', scope: 'Design and Build of Swimming Pool with Jacuzzi',},
+  {id: 10,name: 'LASAM RESIDENCE',image: image10,location: 'Xavierville Village, Quezon City',scope: 'Design and Build of Swimming Pool with Water Feature',
   },
 
   {
@@ -224,16 +197,16 @@ const Project = () => {
         <div className="flex items-center">
           <div className="flex space-x-4">
             {/* Replace <a> with <Link> and remove href attribute */}
-            <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
-            <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
-            <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
-            <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
-            <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
+            <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Home</Link>
+            <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">About</Link>
+            <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Services</Link>
+            <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
+            <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
           </div>
                   
                   {/* Login Button - If it navigates to a login page, consider using Link */}
                   <Link to="/login">
-              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300 hover:scale-110 active:scale-75 transition-transform">
+              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
                 Login
               </button>
             </Link>
@@ -254,7 +227,7 @@ const Project = () => {
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
-      <PopupChatWindow/>
+        <PopupChatWindow/>
     </div>
   );
 };
