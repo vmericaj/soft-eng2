@@ -7,7 +7,7 @@ import serhomes from '../assets/9.png';
 import serpool from '../assets/10.png';
 import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
-
+//import
 
 const AboutUs = () => {
   const containerShadowStyle = {

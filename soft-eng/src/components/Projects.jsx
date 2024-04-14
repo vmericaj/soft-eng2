@@ -32,52 +32,12 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import PopupChatWindow from './PopupChatWindow';
 
 const projectData = [
-  {
-    id: 1,
-    name: 'PRIVATE RESIDENCE',
-    image: image1,
-    location: 'Pasig City',
-    scope: 'Residential House Renovation',
-  },
-  {
-    id: 2,
-    name: 'PLAZUELA DE-ILO-ILO',
-    image: image2,
-    location:'Ilo-Ilo City', 
-    scope: 'Design and Build of Fountain',
-  },
-
-  {
-    id: 3,
-    name: 'FILINVEST-MIMOSA',
-    image: image3,
-    location:'Clark, Pampanga', 
-    scope: 'Design and Build of Gazebo, Landscaping and Hardscaping',
-  },
-
-  {
-    id: 4,
-    name: 'PRIVATE CONDOMINIUM UNIT',
-    image: image4,
-    location:'Skyline Premier One Balete, Balete Drive, Quezon City', 
-    scope: 'Condominium Renovation and Retrofitting',
-  },
-
-  {
-    id: 5,
-    name: 'VINTAGE RESTAURANT',
-    image: image5,
-    location:'Mandaluyong City', 
-    scope: 'Restaurant Renovation and Retrofitting',
-  },
-
-  {
-    id: 6,
-    name: 'MOLDEX REALTY INC',
-    image: image6,
-    location:'Golden Empire Tower, 1322 Roxas Blvd. Ermita, Manila', 
-    scope: 'Modern Condominium Unit Renovation',
-  },
+  {id: 1, name: 'PRIVATE RESIDENCE', image: image1, location: 'Pasig City', scope: 'Residential House Renovation',},
+  {id: 2,name: 'PLAZUELA DE-ILO-ILO',image: image2,location:'Ilo-Ilo City', scope: 'Design and Build of Fountain'},
+  {id: 3, name: 'FILINVEST-MIMOSA', image: image3, location:'Clark, Pampanga', scope: 'Design and Build of Gazebo, Landscaping and Hardscaping', },
+  {id: 4, name: 'PRIVATE CONDOMINIUM UNIT', image: image4, location:'Skyline Premier One Balete, Balete Drive, Quezon City', scope: 'Condominium Renovation and Retrofitting',},
+  {id: 5, name: 'VINTAGE RESTAURANT', image: image5, location:'Mandaluyong City',  scope: 'Restaurant Renovation and Retrofitting',},
+  {id: 6, name: 'MOLDEX REALTY INC', image: image6, location:'Golden Empire Tower, 1322 Roxas Blvd. Ermita, Manila', scope: 'Modern Condominium Unit Renovation',},
 
   {
     id: 7,

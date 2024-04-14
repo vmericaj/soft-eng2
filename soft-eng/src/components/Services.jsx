@@ -12,7 +12,7 @@ import palaceResidencesImage from '../assets/28a.png';
 import poolImage from '../assets/27a.png';
 import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
-
+//import
 
 const Services = () => {
   // State to control the animation for each service row
