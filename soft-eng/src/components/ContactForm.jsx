@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from "../assets/BG.jpg"; // Make sure to use the correct path to your image
+import poolImage from "../assets/29a.png"; // Make sure to use the correct path to your image
 
 const ContactForm = () => {
   return (
@@ -15,7 +15,7 @@ const ContactForm = () => {
           <button className="w-full p-2 bg-orange-500 text-white font-bold">SUBMIT</button>
         </form>
       </div>
-      <div className="hidden md:block md:w-1/2" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}></div>
+      <div className="hidden md:block md:w-1/2" style={{ backgroundImage: `url(${poolImage})`, backgroundSize: 'cover' }}></div>
     </div>
   );
 };

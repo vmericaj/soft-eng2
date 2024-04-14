@@ -2,13 +2,31 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logoImage from '../assets/se.png';
-import image1 from '../assets/image1.png';
-import image2 from '../assets/image2.png';
-import image3 from '../assets/image3.png';
-import image4 from '../assets/image4.png';
-import image5 from '../assets/image5.png';
-import image6 from '../assets/image6.png';
-import aboutHeader from "../assets/header.png";
+import image1 from '../assets/1a.png';
+import image2 from '../assets/2a.png';
+import image3 from '../assets/3a.png';
+import image4 from '../assets/4a.png';
+import image5 from '../assets/5a.png';
+import image6 from '../assets/6a.png';
+import image7 from '../assets/7a.png';
+import image8 from '../assets/8a.png';
+import image9 from '../assets/9a.png';
+import image10 from '../assets/10a.png';
+import image11 from '../assets/11a.png';
+import image12 from '../assets/12a.png';
+import image13 from '../assets/13a.png';
+import image14 from '../assets/14a.png';
+import image15 from '../assets/15a.png';
+import image16 from '../assets/16a.png';
+import image17 from '../assets/17a.png';
+import image18 from '../assets/18a.png';
+import image19 from '../assets/19a.png';
+import image20 from '../assets/20a.png';
+import image21 from '../assets/21a.png';
+import image22 from '../assets/22a.png';
+import image23 from '../assets/23a.png';
+import image24 from '../assets/24a.png';
+import aboutHeader from "../assets/arista.png";
 import './Projects.css'; 
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import PopupChatWindow from './PopupChatWindow';
@@ -16,63 +34,193 @@ import PopupChatWindow from './PopupChatWindow';
 const projectData = [
   {
     id: 1,
-    name: 'THE ONE PALACE RESIDENCES',
-    description: 'Introducing "The One Palace" – a luxurious condominium set to redefine modern living in the heart of Bulacan. The condominium also offers modern fitness facilities, a clubhouse for social gatherings, and a host of recreational options to enrich the lives of its esteemed residents.',
+    name: 'PRIVATE RESIDENCE',
     image: image1,
-    location: 'Embrace a life of luxury and comfort in the burgeoning province of Bulacan',
-    startDate: 'February 23, 2019',
-    endDate: 'November 10, 2022',
-    budget: 'The estimated budget for The One Palace Residences project is PHP 1.2 billion.'
+    location: 'Pasig City',
+    scope: 'Residential House Renovation',
   },
   {
     id: 2,
-    name: 'SERENE HAVEN HOMES',
-    description: 'Short description about Project 2...',
+    name: 'PLAZUELA DE-ILO-ILO',
     image: image2,
-    location: 'Project Location 2',
-    startDate: 'DD/MM/YYYY',
-    endDate: 'DD/MM/YYYY',
-    budget: 'XXX',
+    location:'Ilo-Ilo City', 
+    scope: 'Design and Build of Fountain',
   },
+
   {
     id: 3,
-    name: 'CRYSTAL LAGOON RETREAT',
-    description: 'Short description about Project 3...',
+    name: 'FILINVEST-MIMOSA',
     image: image3,
-    location: 'Project Location 3',
-    startDate: 'DD/MM/YYYY',
-    endDate: 'DD/MM/YYYY',
-    budget: 'XXX',
+    location:'Clark, Pampanga', 
+    scope: 'Design and Build of Gazebo, Landscaping and Hardscaping',
   },
+
   {
     id: 4,
-    name: 'EMPIRE HOTEL RESIDENCE',
-    description: 'Short description about Project 4...',
+    name: 'PRIVATE CONDOMINIUM UNIT',
     image: image4,
-    location: 'Project Location 4',
-    startDate: 'DD/MM/YYYY',
-    endDate: 'DD/MM/YYYY',
-    budget: 'XXX',
+    location:'Skyline Premier One Balete, Balete Drive, Quezon City', 
+    scope: 'Condominium Renovation and Retrofitting',
   },
+
   {
     id: 5,
-    name: 'HARMONY HEIGHTS RESIDENCES',
-    description: 'Short description about Project 5...',
+    name: 'VINTAGE RESTAURANT',
     image: image5,
-    location: 'Project Location 5',
-    startDate: 'DD/MM/YYYY',
-    endDate: 'DD/MM/YYYY',
-    budget: 'XXX',
+    location:'Mandaluyong City', 
+    scope: 'Restaurant Renovation and Retrofitting',
   },
+
   {
     id: 6,
-    name: 'AQUA OASIS POOL COMPLEX',
-    description: 'Short description about Project 6...',
+    name: 'MOLDEX REALTY INC',
     image: image6,
-    location: 'Project Location 6',
-    startDate: 'DD/MM/YYYY',
-    endDate: 'DD/MM/YYYY',
-    budget: 'XXX',
+    location:'Golden Empire Tower, 1322 Roxas Blvd. Ermita, Manila', 
+    scope: 'Modern Condominium Unit Renovation',
+  },
+
+  {
+    id: 7,
+    name: 'DEWI SRI FRM AND RESORT',
+    image: image7,
+    location: 'Pila, Laguna',
+    scope: 'Design and Build of Swimming Pool with Bubbler',
+  },
+
+  {
+    id: 8,
+    name: 'ADAPON-SAJO RESIDENCE',
+    image: image8,
+    location: 'Muntinlupa, City ',
+    scope: 'Design and Build of Infinity Pool with Water Feature',
+  },
+
+  {
+    id: 9,
+    name: 'PRIVATE RESORT',
+    image: image9,
+    location: 'Morong, Bataan',
+    scope: 'Design and Build of Swimming Pool with Jacuzzi',
+  },
+
+  {
+    id: 10,
+    name: 'LASAM RESIDENCE',
+    image: image10,
+    location: 'Xavierville Village, Quezon City',
+    scope: 'Design and Build of Swimming Pool with Water Feature',
+  },
+
+  {
+    id: 11,
+    name: 'MANILA MARRIOTT HOTEL',
+    image: image11,
+    location: 'Pasay City',
+    scope: 'Supply and Installation of Jacuzzi and Spa',
+  },
+
+  {
+    id: 12,
+    name: 'CHUA RESIDENCE',
+    image: image12,
+    location: 'Mei Ling Village, Quezon City',
+    scope: 'Design and Build of Swimming Pool with Water Feature and Pool Heater',
+  },
+  
+  {
+    id: 13,
+    name: 'PAJARILLA RESIDENCE',
+    image: image13,
+    location: 'Xavierville, Quezon City',
+    scope: 'Waterproofing and Plumbing Works',
+  },
+
+  {
+    id: 14,
+    name: 'ADAPON-SAJO RESIDENCE',
+    image: image14,
+    location: 'Muntinlupa City',
+    scope: 'Design and Build of Infinity Pool with Water Feature',
+  },
+
+  {
+    id: 15,
+    name: 'THOMSPON RESIDENCE',
+    image: image15,
+    location: 'Paranaque City ',
+    scope: 'Design and Build of Swimming Pool with Water Feature',
+  },
+
+  {
+    id: 16,
+    name: 'ALEJANDRINO RESIDENCES',
+    image: image16,
+    location: 'Valenzuela City',
+    scope: 'Ancestral House Renovation Construction of 4-Storey House Extension with Guest House',
+  },
+
+  {
+    id: 17,
+    name: 'DE GUZMAN RESIDENCE',
+    image: image17,
+    location: 'Quezon City',
+    scope: 'Residential House Renovation',
+  },
+
+  {
+    id: 18,
+    name: 'REYES RESIDENCE',
+    image: image18,
+    location: 'Quezon City',
+    scope: 'Design and Build of Residential House',
+  },
+
+  {
+    id: 19,
+    name: 'PELESCO RESIDENCE',
+    image: image19,
+    location: 'Antipolo, City',
+    scope: 'House Renovation',
+  },
+
+  {
+    id: 20,
+    name: 'LAIZ RESIDENCES',
+    image: image20,
+    location: 'Panghulo, Obando, Bulacan',
+    scope: 'Two-Storey Four Bedrooms House Renovation',
+  },
+
+  {
+    id: 21,
+    name: 'SALUMBIDES RESIDENCE',
+    image: image21,
+    location: 'Quezon City',
+    scope: 'Design and Build of Residential House',
+  },
+
+  {
+    id: 22,
+    name: 'RHAPSODY RESIDENCES',
+    image: image22,
+    location: 'Paranaque City',
+    scope: 'Supply and Installation of Water Feature',
+  },
+
+  {
+    id: 23,
+    name: 'PRIVATE RESIDENCE',
+    image: image23,
+    location: 'PASIG CITY',
+    scope: 'Supply and Installation of Wood Cladding',
+  },
+
+  {
+    id: 24,
+    name: 'RIZAL PARK AMPHITHEATER',
+    image: image24,
+    location: 'Manila',
+    scope: 'Installation of Tencil Membrane',
   },
 ];
 
@@ -87,20 +235,17 @@ const ProjectCard = ({ project }) => {
       <div className="project-card">
         <img src={project.image} alt={project.name} className="project-image"/>
         <div className="project-title-overlay">
-        <h3 className="project-title">{project.name}</h3>
+        <h3 className="project-title"style={{ marginTop: '0'}}>{project.name}</h3>
         <button className="toggle-details-button" onClick={handleToggleDetails}>
         <IoIosArrowDropdownCircle className={`${showDetails ? 'rotate' : ''}`} />
         </button>
       </div>
       <div className={`project-details-overlay ${showDetails ? 'project-details-visible' : ''}`}>
               {/* Content that you want to show/hide goes here */}
-              <div className="project-details">
+              <div className="project-details"style={{ marginTop: '0'}}>
                 {/* Your project details */}
-                <p>{project.description}</p>
                         <p><span className="highlight">LOCATION:</span> {project.location}</p>
-                        <p><span className="highlight">START DATE:</span> {project.startDate}</p>
-                        <p><span className="highlight">END DATE:</span> {project.endDate}</p>
-                        <p><span className="highlight">BUDGET:</span> {project.budget}</p>
+                        <p><span className="highlight">SCOPE OF WORKS:</span> {project.scope}</p>
               </div>
             </div>
         </div>
@@ -144,7 +289,7 @@ const Project = () => {
         <img src={aboutHeader} alt="about" className="w-full h-auto rounded-xl shadow-lg"/>
       </div>
 
-      <div className="project-container grid grid-cols-3 gap-4 py-10">
+      <div className="project-container grid grid-cols-3 gap-0 py-10 ">
       {projectData.map(project => (
           <ProjectCard key={project.id} project={project} />
         ))}

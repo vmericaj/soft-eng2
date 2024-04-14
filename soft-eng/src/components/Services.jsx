@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '../assets/se.png';
-import sercondo from '../assets/sercondo.jpg';
-import serhomes from '../assets/serhomes.jpg';
-import serpool from '../assets/2.png';
-import serwater from '../assets/plazuela.jpg';
-import landscapeImage from '../assets/landscape.png';
-import palaceResidencesImage from '../assets/abs.png';
-import poolImage from '../assets/pool.png';
-import aboutHeader from "../assets/header.png";
+import serconstruct from '../assets/11.png';
+import serpool from '../assets/3.png';
+import serland from '../assets/14.png';
+import serspa from '../assets/16.png';
+import serwater from '../assets/17.png';
+import serpaint from '../assets/15.png';
+import landscapeImage from '../assets/26a.png';
+import palaceResidencesImage from '../assets/28a.png';
+import poolImage from '../assets/27a.png';
+import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
 
 
@@ -64,7 +66,7 @@ const Services = () => {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     rowGap: '0rem',
-    gap: '3rem',
+    gap: '2rem',
     width: '95%',
     marginTop: '1rem', // This will add space between the header image and the grid
     margin: 'auto',
@@ -228,12 +230,15 @@ const Services = () => {
       {/* Projects Grid */}
     <div style={containerStyle}>
         {[
-          { name: 'serpool', image: serpool, title: 'SWIMMING POOLS' },
-          { name: 'serhomes', image: serhomes, title: 'HOMES' },
-          { name: 'sercondo', image: serwater, title: 'WATER FEATURES' },
-          { name: 'sercondo', image: sercondo, title: 'LANDSCAPING AND HARDSCAPING' },
-          { name: 'sercondo', image: sercondo, title: 'SPA AND SAUNA' },
-          { name: 'sercondo', image: sercondo, title: 'PAINTING WORKS' },
+
+
+          { name: 'serpool', image: serconstruct, title: 'CONSTRUCTION' },
+          { name: 'serhomes', image: serpool, title: 'SWIMMING POOLS' },
+          { name: 'serwater', image: serland, title: 'LANDSCAPING' },
+         
+          { name: 'serhomes', image: serwater, title: 'WATER FEATURES' },
+          { name: 'serpool', image: serspa, title: 'SPA AND SAUNA' },
+          { name: 'serwater', image: serpaint, title: 'PAINTING WORKS' },
         ].map(project => (
           <div
            key={project.name}
@@ -252,16 +257,16 @@ const Services = () => {
       <div ref={rowRefs.row1} style={{ ...rowStyle, ...getRowAnimationStyle('row1') }}>
         <div style={textSectionStyle}>
            <Line /> {/* Add the line here */}
-          <h2 style={titleStyle}>Elevate urban living with our condominium construction services.</h2>
-          <p style={descriptionStyle}>The heart of our condominium construction services lies in the delivery of exceptional multi-unit residential spaces. We take immense pride in crafting environments that go beyond the ordinary, where each unit is a testament to our dedication to quality and attention to detail. From concept to completion, our team is driven to create living spaces that seamlessly integrate luxury, practicality, and aesthetic appeal.</p>
+          <h2 style={titleStyle}>Dsigning Dream Spaces Inside and Out.</h2>
+          <p style={descriptionStyle}>Behold the transformation into a grand, open-plan sanctuary where marble floors gleam beneath a symphony of natural light. Every corner of the home, from the expansive living area to the sleek gourmet kitchen, has been meticulously reimagined to exude sophistication and seamless flow.</p>
           {/* ... other text content ... */}
         </div>
         <div style={imageSectionStyle}>
           <img src={landscapeImage} alt="Luxury Design" style={{ width: '100%', height: 'auto' }} />
           {/* Overlay Text */}
           <div style={overlayTextStyle}>
-            <h4 style={overlayTitleStyle}>The One Palace Residences</h4>
-            <p style={overlayDescriptionStyle}>An architectural masterpiece, blending classic elegance with modern luxury to offer residents a lifestyle of sophistication and comfort.</p>
+            <h4 style={overlayTitleStyle}>De Guzman Residences</h4>
+            <p style={overlayDescriptionStyle}>Resdiential House Renovation</p>
             <Link to="/projects" style={readMoreButtonStyle}>
               READ MORE</Link>
           </div>
@@ -275,15 +280,15 @@ const Services = () => {
                 <img src={palaceResidencesImage} alt="Palace Residences" style={{ width: '100%', height: 'auto' }} />
                 {/* Overlay Text */}
                 <div style={overlayTextStyle}>
-                  <h4 style={overlayTitleStyle}>Your Project Title</h4>
-                  <p>A short description of the project...</p>
+                  <h4 style={overlayTitleStyle}>Alejandrino Residence </h4>
+                  <p>Ancestral House Renovation Construction of 4-Storey House Extension with Guest House</p>
                   <Link to="/projects" style={readMoreButtonStyle}>
                     READ MORE</Link>
                 </div>
               </div>
               <div style={textSectionStyle}>
-                <h2 style={titleStyle}>Dive into Luxury with Our Expertly Crafted Swimming Pools</h2>
-                <p style={descriptionStyle}>Imagine stepping into your backyard and being greeted by a luxurious oasis...</p>
+                <h2 style={titleStyle}>Dive into Luxury with Our Expert Touch</h2>
+                <p style={descriptionStyle}>An Ancestral House Renovation that seamlessly transforms tradition into contemporary grandeur. This 4-Storey Residence, rooted in heritage, has been meticulously revitalized to meet the demands of modern living while preserving its classic charm. Each floor unfolds with thoughtful design, blending timeless elements with modern amenities. The renovation pays homage to the home’s original character, infusing it with upgraded materials and finishes that honor its legacy. </p>
                 {/* ... other text content ... */}
               </div>
             </div>  
@@ -292,16 +297,16 @@ const Services = () => {
       <div ref={rowRefs.row3} style={{ ...rowStyle, ...getRowAnimationStyle('row3') }}>
               <div style={textSectionStyle}>
                 <Line /> {/* Add the line here */}
-                <h2 style={titleStyle}>Elevate urban living with our condominium construction services.</h2>
-                <p style={descriptionStyle}>The heart of our condominium construction services lies in the delivery...</p>
+                <h2 style={titleStyle}>Build. Beautify. Breathe</h2>
+                <p style={descriptionStyle}>Discover the epitome of urban sophistication with the recently completed renovation at the Golden Empire Tower.Every detail has been carefully curated to create a serene and stylish space that balances modernity with comfort. Rich wood flooring pairs with soft, flowing curtains and contemporary furnishings to create a warm, inviting atmosphere, while the unique blend of textures and sleek design elements ensures a luxurious living experience.</p>
                 {/* ... other text content ... */}
               </div>
               <div style={imageSectionStyle}>
               <img src={poolImage} alt="Swimming Pools" style={{ width: '100%', height: 'auto' }} />
                 {/* Overlay Text */}
                 <div style={overlayTextStyle}>
-                  <h4 style={overlayTitleStyle}>The One Palace Residences</h4>
-                  <p>An architectural masterpiece, blending classic elegance with modern luxury to offer residents a lifestyle of sophistication and comfort.</p>
+                  <h4 style={overlayTitleStyle}>Moldex Realty Inc.</h4>
+                  <p>Modern Condominium Unit Renovation</p>
                   <Link to="/projects"  style={readMoreButtonStyle}>
                     READ MORE</Link>
                 </div>

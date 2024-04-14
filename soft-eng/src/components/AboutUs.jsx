@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
 import sercondo from '../assets/1.png';
-import serhomes from '../assets/7.png';
-import serpool from '../assets/3.png';
+import serhomes from '../assets/9.png';
+import serpool from '../assets/10.png';
 import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
 
