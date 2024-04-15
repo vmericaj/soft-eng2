@@ -93,11 +93,8 @@ import backgroundImage3 from "../assets/contact.png"; // Path to your third imag
                 READ MORE
             </button>
             <button className="text-white py-2 px-4 rounded-lg mr-4 transition-colors duration-200 bg-gradient-to-r from-gradientEnd to-gradientStart hover:bg-black hover:text-white hover:from-gradientStart hover:to-gradientEnd border hover:border-white">
-    BOOK ONLINE NOW
-</button>
-
-
-
+              BOOK ONLINE NOW
+            </button>
             </div>
           </div>
         </div>

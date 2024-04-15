@@ -13,6 +13,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { MdOutlinePhoneInTalk } from "react-icons/md";
 import { VscTypeHierarchySuper } from 'react-icons/vsc'; // Import icon for department
 import { FaRegIdBadge } from 'react-icons/fa';
+import { useUser } from '../components/UserContext';
 // ... other imports ...
 
 // Define InfoCard component inside your Employees component
@@ -58,16 +59,17 @@ const Employees = () => {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0.5rem 1rem',
-    marginLeft: '3rem', // Add a little space between the button and alert
-    borderRadius: '0.375rem', // Tailwind rounded-md equivalent
-    backgroundColor: '#C6F6D5', // Tailwind bg-green-200 equivalent
-    borderColor: '#9AE6B4', // Tailwind border-green-300 equivalent
+    marginLeft: '3rem',
+    borderRadius: '0.375rem',
+    backgroundColor: '#C6F6D5', // Change based on action
+    borderColor: '#9AE6B4', // Change based on action
     borderWidth: '2px',
-    fontSize: '0.875rem', // Tailwind text-sm equivalent
-    fontWeight: '600', // Tailwind font-semibold equivalent
-    flexGrow: 1, // Grow to use available space
-    height: '100%', // Match the height of the buttons
+    fontSize: '0.875rem',
+    fontWeight: '600',
+    flexGrow: 1,
+    height: '100%',
   };
+  
   
   
   
@@ -93,10 +95,12 @@ const Employees = () => {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteIndex, setDeleteIndex] = useState(null);
     const [currentAction, setCurrentAction] = useState('');
+    const [image, setImage] = useState(null);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [image, setImage] = useState(null);
-
+    const [alertColor, setAlertColor] = useState('green'); 
+    const { name, setName, profilePic, updateUser } = useUser();
+    
     const handleImageChange = (e) => {
       // Assuming you want to store the file itself, not just the file path
       if (e.target.files && e.target.files[0]) {
@@ -151,54 +155,29 @@ const Employees = () => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      let successMessage = '';
-      const formData = new FormData();
-    formData.append('image', image); // Append the image file to the formData
-    // Append other form data
-    formData.append('eid', newProject.cid);
-    formData.append('name', newProject.name);
-    formData.append('number', newProject.number);
-    formData.append('email', newProject.email);
-  
-      if (isEditing) {
-          const updatedProjects = projects.map((item, index) => 
-              index === editIndex ? newProject : item
-          );
-          setProjects(updatedProjects);
-          setIsEditing(false);
-          successMessage = `Successfully updated the project '${newProject.projectName}'.`;
-      } else {
-          setProjects([...projects, newProject]);
-          successMessage = `Successfully added the project '${newProject.projectName}'.`;
-      }
-  
-      createNotification(successMessage);
+      
+      const isUpdate = isEditing;
+      const updatedProjects = isUpdate ? projects.map((item, index) => 
+          index === editIndex ? {...newProject, image: image || newProject.image} : item
+      ) : [...projects, {...newProject, id: Date.now(), image: image || newProject.image}];
+    
+      setProjects(updatedProjects);
+      const actionMessage = isUpdate ? `Successfully updated the employee '${newProject.name}'.` : `Successfully added the employee '${newProject.name}'.`;
+      setSuccessMessage(actionMessage);
       setShowSuccessAlert(true);
+      setAlertColor(isUpdate ? 'orange' : 'green');
       setTimeout(() => setShowSuccessAlert(false), 3000);
-
+    
+      resetFormState(); // This should also handle closing the form
+    };
+  
+  
       const submittedProject = {
             ...newProject,
             image: image,
             id: Date.now(), // using the timestamp as an ID
         };
 
-        setProjects([...projects, submittedProject]);
-        setShowSuccessAlert(true);
-        setSuccessMessage(`Successfully added the project '${newProject.name}'.`);
-        setTimeout(() => setShowSuccessAlert(false), 3000);
-        setShowForm(false);
-        setNewProject({
-            eid: '',
-            name: '',
-            position: '',
-            department: '',
-            email: '',
-            number: '',
-            attachment: '',
-            action: ''
-        });
-        setImage(null);
-    };
 
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
@@ -210,10 +189,12 @@ const Employees = () => {
 
     const handleEditClick = (project, index) => {
       setNewProject(project);
+      setImage(project.image); // Ensure the existing image is loaded into state
       setEditIndex(index);
-      setShowPasswordPrompt(true);
-      setCurrentAction('edit');
+      setIsEditing(true);
+      setShowForm(true);
   };
+  
     
 
   const handleUpdate = (e) => {
@@ -240,21 +221,10 @@ const Employees = () => {
     setDeleteIndex(index);
     setShowDeleteConfirmation(true);
 };
-  const handleCancel = () => {
-    setShowForm(false);
-    setIsEditing(false);
-    setEditIndex(-1);
-    setNewProject({
-      eid: '',
-        name: '',
-        position: '',
-        department: '',
-        email: '',
-        number: '',
-        attachment: '',
-        action: ''
-    });
-  };
+const handleCancel = () => {
+  resetFormState();  // Use resetFormState to handle all cleanup
+};
+
   const confirmDelete = () => {
     setShowDeleteConfirmation(false);
     setShowPasswordPrompt(true);
@@ -270,11 +240,18 @@ const deleteProject = () => {
       const projectToDelete = projects[deleteIndex];
       const updatedProjects = projects.filter((_, index) => index !== deleteIndex);
       setProjects(updatedProjects);
-      createNotification(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+      const deleteMessage = `Successfully deleted the project '${projectToDelete.name}'.`;
+      setSuccessMessage(deleteMessage);
       setShowSuccessAlert(true);
-      setSuccessMessage(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+      setAlertColor('red');
       setTimeout(() => setShowSuccessAlert(false), 3000);
-      setDeleteIndex(null); // Reset delete index after deletion
+
+      // Adding notification for delete
+      createNotification(deleteMessage);
+
+      // Resetting form state and closing all dialogs
+      resetFormState();
+      setShowDeleteConfirmation(false);
   }
   setShowPasswordPrompt(false);
 };
@@ -332,6 +309,23 @@ const toggleNotifications = () => {
 const filteredProjects = getFilteredProjects();
 
 
+const resetFormState = () => {
+  setNewProject({
+      eid: '',
+      name: '',
+      position: '',
+      department: '',
+      email: '',
+      number: '',
+      attachment: '',
+      action: ''
+  });
+  setImage(null);
+  setIsEditing(false);
+  setEditIndex(-1);
+  setShowForm(false);  // This ensures the form is closed after reset
+};
+
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -345,11 +339,11 @@ const filteredProjects = getFilteredProjects();
           </div>
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/projecttable" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -370,9 +364,12 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-              <span>LOGOUT</span>
-            </button>
+          <Link
+            to="/"  // Change "/logout" to your desired path
+            className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white"
+          >
+            <span>LOGOUT</span>
+          </Link>
           </div>
         </div>
       </div>
@@ -421,12 +418,18 @@ const filteredProjects = getFilteredProjects();
     </div>
   )}
 </div>
-          <div className="flex items-center space-x-2">
-            {/* Search box */}
-            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
-            <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
-            <span>Juan Dela Cruz</span>
-          </div>
+<div className="flex items-center space-x-2">
+          {profilePic && (
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="rounded-full h-8 w-8 object-cover"  // Ensures the image is circular and fits within the dimensions
+            />
+          )}
+
+          {/* Display the user's name next to the image */}
+          <span>{name}</span>
+        </div>
         </div>
 
         {/* Main Content */}
@@ -436,7 +439,7 @@ const filteredProjects = getFilteredProjects();
     <input
         className="border rounded-l py-2 px-3"
         type="search"
-        placeholder="Search projects"
+        placeholder="Search Employee"
         value={searchTerm}
         onChange={handleSearchChange}
     />
@@ -458,9 +461,10 @@ const filteredProjects = getFilteredProjects();
         + EMPLOYEE
     </button>
     {showSuccessAlert && (
-    <div style={alertStyle} className="flex items-center">
-        <span className="text-green-800">{successMessage}</span>
-    </div>
+      <div style={{ ...alertStyle, backgroundColor: alertColor === 'red' ? '#F56565' : (alertColor === 'orange' ? '#ED8936' : '#C6F6D5'), borderColor: alertColor === 'red' ? '#C53030' : (alertColor === 'orange' ? '#DD6B20' : '#9AE6B4') }}>
+        <span>{successMessage}</span>
+      </div>
+    
 )}
 
 </div>
@@ -477,16 +481,16 @@ const filteredProjects = getFilteredProjects();
             </div>
         )}
 {showPasswordPrompt && (
-  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-20">
-    <div className="bg-black p-6 rounded shadow-xl">
-      {/* Logo and title section */}
-      <div className="flex flex-col items-center ">
-    <img src={logo} alt="Logo" className="h-14 w-14" />
-    <h1 className="text-xl font-bold text-customOrange mt-2 mb-4">Inventory System</h1>
-    <p className="text-xs text-white">To proceed and access the system, please enter your password</p>
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+  <div className="bg-white p-6 rounded shadow-xl">
+    {/* Logo and title section */}
+    <div className="flex flex-col items-center ">
+  <img src={logo} alt="Logo" className="h-14 w-14" />
+  <h1 className="text-xl font-bold text-customOrange mt-2 mb-4">Inventory System</h1>
+  <p className="text-xs text-black">To proceed and access the system, please enter your password</p>
 
-    <p className="text-xs text-white"> below.  This secure login ensures that only authorized personnel </p>
-    <p className="text-xs text-white">can view and manage the inventory data.</p>
+  <p className="text-xs text-black"> below.  This secure login ensures that only authorized personnel </p>
+  <p className="text-xs text-black">can view and manage the inventory data.</p>
 </div>
 
       
@@ -521,63 +525,70 @@ const filteredProjects = getFilteredProjects();
 
           {showForm && (
 
-<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10 px-6 md:px-12 lg:px-24">
 <div className="bg-white p-6 rounded shadow-xl">
+<div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-xl">
+    <img src={logo} alt="Logo" className="h-14 w-14" />
+</div>
+<div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-lg">
+    ADD PROJECT
+</div>
 
-    <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-wrap -mx-2">
+<form onSubmit={handleSubmit} className="space-y-4 max-w-4xl mx-auto">
+      
+      <div className="flex flex-wrap -mx-2">
             {/* Wrap each input with a div and apply a consistent width */}
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="eid" className="block text-gray-700 text-sm font-bold mb-2">EMPLOYEE ID</label>
-                <input type="text"id="eid" name="eid" value={newProject.eid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text"id="eid" name="eid" value={newProject.eid} placeholder="EID"  onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">FULL NAME</label>
-                <input type="text" id="name" name="name" value={newProject.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="name" name="name" value={newProject.name} placeholder="Name" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="position" className="block text-gray-700 text-sm font-bold mb-2">POSITION</label>
-                <input type="text" id="position" name="position" value={newProject.position} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="position" name="position" value={newProject.position} placeholder="Position" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">DEPARTMENT</label>
-                <input type="text" id="department" name="department" value={newProject.department} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="department" name="department" value={newProject.department} placeholder="Department" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL</label>
-                <input type="text" id="email" name="email" value={newProject.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="email" name="email" value={newProject.email} placeholder="Email Address" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
            
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
-                <input type="text" id="number" name="number" value={newProject.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="number" name="number" value={newProject.number} placeholder="Contact Number " onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full">
-            <label htmlFor="imageUpload" className="block text-gray-700 text-sm font-bold mb-2">Attach Picture</label>
+            <div className="px-2 w-full md:w-1/3 mb-2">
+            <label htmlFor="imageUpload" className="block text-gray-700 text-sm font-bold mb-2">Attachment</label>
             <input type="file" id="imageUpload" name="imageUpload" accept="image/*" 
-                  className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                  className=" border shadow rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                 onChange={handleImageChange} />
-</div>
-{image && (
-    <div className="px-2 w-full py-4">
-        <img src={URL.createObjectURL(image)} alt="Preview" className="max-w-xs" />
-    </div>
-)}
-        </div>
+                  </div>
+                  {image && (
+                      <div className="px-2 w-full py-4">
+                          <img src={URL.createObjectURL(image)} alt="Preview" className="max-w-xs" />
+                      </div>
+                  )}
+            </div>
 
         {/* Save and Cancel buttons */}
-        <div className="flex items-center space-x-4">
-            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-md">
-                Save
-            </button>
-            <button type="button" onClick={handleCancel} className="bg-red-500 text-white px-4 py-2 rounded-md">
-                Cancel
-            </button>
+        <div className="flex items-center justify-center space-x-4">
+        <button type="submit" className="bg-green-500 text-white w-32 px-3 font-semibold py-2 rounded-md">
+            Save
+        </button>
+        <button type="button" onClick={handleCancel} className="bg-red-500 text-white font-semibold w-32 px-4 py-2 rounded-md">
+            Cancel
+        </button>
         </div>
     </form>
 </div>
