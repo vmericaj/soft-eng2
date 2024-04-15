@@ -67,8 +67,16 @@ const AboutUs = () => {
   const hoverContainerStyle = {
     backgroundImage: 'linear-gradient(#E6D4A5 0%, #A9CBD0 50%)', // Smooth blend with more of #E6D4A5
   };
-  
 
+  const overlayStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)', 
+    zIndex: 1, 
+  };
 
   const hoverTextStyle = {
     color: 'black', // Change text color to orange on hover
@@ -111,6 +119,7 @@ const AboutUs = () => {
           <h1 className="text-4xl font-bold text-white">ABOUT US</h1>
         </div>
         <img src={aboutHeader} alt="about" className="w-full h-auto rounded-xl shadow-lg"/>
+        <div style={overlayStyle}></div>
       </div>
       
       {/* containers */}

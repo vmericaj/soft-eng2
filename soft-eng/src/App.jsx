@@ -1,12 +1,4 @@
-//import Sidebar from './components/Sidebar';
-//import Logo from './components/Logo';
 
-//import Dropdown from './components/Dropdown';
-
-import CustomersTable from './components/CustomersTable';
-import SuppliersTable from './components/SuppliersTable';
-//import HomePage from './components/HomePage';
-import AboutUs from './components/AboutUs';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 

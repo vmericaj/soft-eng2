@@ -51,7 +51,7 @@ const Contact = () => {
         </nav>
       </header>
       <div className="mt-8 mx-auto max-w-[92%] grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl cursor-pointer shadow-lg bg-white flex flex-col justify-center items-center">
+            <div className="p-4 rounded-xl  shadow-lg bg-white flex flex-col justify-center items-center">
             <img src={alarmIcon} alt="Image 1" className="h-30 w-28 object-cover rounded-md mb-4" />
             <div className="text-center">
                 <h1 className="text-m font-bold text-black mb-2">HOURS OF OPERATION </h1>
@@ -60,7 +60,7 @@ const Contact = () => {
             </div>
 
             {/* Container 2 */}
-            <div className="p-4 rounded-xl cursor-pointer shadow-lg bg-white flex flex-col justify-center items-center">
+            <div className="p-4 rounded-xl shadow-lg bg-white flex flex-col justify-center items-center">
             <img src={phoneIcon} alt="Image 1" className="h-30 w-28 object-cover rounded-md mb-4" />
             <div className="text-center">
                 <h1 className="text-m font-bold text-black mb-2">PHONE</h1>
@@ -69,7 +69,7 @@ const Contact = () => {
             </div>
 
             {/* Container 3 */}
-            <div className="p-4 rounded-xl cursor-pointer shadow-lg bg-white flex flex-col justify-center items-center">
+            <div className="p-4 rounded-xl  shadow-lg bg-white flex flex-col justify-center items-center">
             <img src={emailIcon} alt="Image 1" className="h-30 w-28 object-cover rounded-md mb-4" />
             <div className="text-center">
                 <h1 className="text-m font-bold text-black mb-2">GENERAL INQUIRIES </h1>
@@ -78,7 +78,7 @@ const Contact = () => {
             </div>
 
             {/* Container 4 */}
-            <div className="p-4 rounded-xl cursor-pointer shadow-lg bg-white flex flex-col justify-center items-center">
+            <div className="p-4 rounded-xl  shadow-lg bg-white flex flex-col justify-center items-center">
             <img src={locationIcon} alt="Image 1" className="h-30 w-28 object-cover rounded-md mb-4" />
             <div className="text-center">
                 <h1 className="text-m font-bold text-black mb-2">LOCATION</h1>

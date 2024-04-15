@@ -191,6 +191,16 @@ const Services = () => {
       transform: 'scale(1.05)',
     };
 
+    const overlayStyle = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.2)', 
+      zIndex: 1, 
+      
+    };
 
   return (
     <div>
@@ -221,12 +231,13 @@ const Services = () => {
               </nav>
             </header>
           
-            <div className="mt-4 mx-auto max-w-[92%] relative">
-        <div className="absolute z-10 w-full h-full flex items-center justify-center">
-          <h1 className="text-4xl font-bold text-white">SERVICES</h1>
-        </div>
-        <img src={aboutHeader} alt="about" className="w-full h-auto rounded-xl shadow-lg"/>
-      </div>
+                <div className="mt-4 mx-auto max-w-[92%] relative">
+            <div className="absolute z-10 w-full h-full flex items-center justify-center">
+              <h1 className="text-4xl font-bold text-white">SERVICES</h1>
+            </div>
+            <img src={aboutHeader} alt="about" className="w-full h-auto rounded-xl shadow-lg"/>
+            <div style={overlayStyle}></div>
+          </div>
 
       {/* Projects Grid */}
     <div style={containerStyle}>

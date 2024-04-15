@@ -97,12 +97,12 @@ import Footer from './Footer';
             <h1 className="text-5xl font-bold shadow-xl">FROM BLUEPRINT TO REALITY</h1>
             <p className="text-lg mt-4 shadow-xl">3MV Construction stands as the unwavering name you can rely on to turn these aspirations into tangible achievements.</p>
             <div className="mt-8">
-            <button className="text-white py-2 px-4 rounded-lg mr-4 transition-colors border-transparent duration-200 bg-black hover:bg-customBlue hover:text-white border hover:border-customBlue hover:scale-110 active:scale-75 transition-transform">
-                READ MORE
-            </button>
-            <button className="text-white py-2 px-4 rounded-lg mr-4 transition-colors duration-200 bg-gradient-to-r from-gradientEnd to-gradientStart hover:bg-black hover:text-white hover:from-gradientStart hover:to-gradientEnd border hover:border-white">
-              BOOK ONLINE NOW
-            </button>
+            <Link to="/about" className="text-white py-2 px-4 rounded-lg mr-4 transition-colors border-transparent duration-200 bg-black hover:bg-customBlue hover:text-white border hover:border-customBlue hover:scale-110 active:scale-75 transition-transform">
+            READ MORE</Link>
+
+            <Link to="/contact" className="text-white py-2 px-4 rounded-lg mr-4 transition-colors duration-200 bg-gradient-to-r from-gradientEnd to-gradientStart hover:bg-black hover:text-white hover:from-gradientStart hover:to-gradientEnd border hover:border-white">
+                BOOK ONLINE NOW
+            </Link>
             </div>
           </div>
         </div>
