@@ -12,7 +12,7 @@ import palaceResidencesImage from '../assets/28a.png';
 import poolImage from '../assets/27a.png';
 import aboutHeader from "../assets/arista.png";
 import PopupChatWindow from './PopupChatWindow';
-//import
+import Footer from './Footer';
 
 
 const Services = () => {
@@ -198,7 +198,7 @@ const Services = () => {
       right: 0,
       bottom: 0,
       backgroundColor: 'rgba(0, 0, 0, 0.2)', 
-      zIndex: 1, 
+      
       
     };
 
@@ -216,11 +216,11 @@ const Services = () => {
                 <div className="flex items-center">
                   <div className="flex space-x-4">
                     {/* Replace <a> with <Link> and remove href attribute */}
-                    <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-                    <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">About</Link>
-                    <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Services</Link>
-                    <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
-                    <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
+                    <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
+                    <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
+                    <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
+                    <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
+                    <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
                   </div>
                   
                   {/* Login Button - If it navigates to a login page, consider using Link */}
@@ -325,6 +325,7 @@ const Services = () => {
               </div>
             </div>
             <PopupChatWindow/>
+            <Footer/>
         </div>
   );
 };

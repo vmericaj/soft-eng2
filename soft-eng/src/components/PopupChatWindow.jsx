@@ -117,7 +117,7 @@ function PopupChatWindow() {
         }, [showChat]);
 
     return (
-        <div className={`fixed bottom-16 right-2`}>
+        <div className={`fixed bottom-16 right-2 z-50`}>
       <img src={chatBotIcon} alt="Chatbot Icon" className={`w-13 h-11 fixed bottom-4 right-4 cursor-pointer hover:scale-110 active:scale-75 transition-transform`} onClick={toggleForm} />
       <div className={`chat-popup transform transition-all duration-300 ease-in-out ${showChat ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'} right-2 bg-white shadow-xl rounded-md overflow-hidden z-10`}
            style={{ width: '390px', height: '535px', bottom: 'calc(100px + 4rem * ${showChat ? 1 : 0})'}}>

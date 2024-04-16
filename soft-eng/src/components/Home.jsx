@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
 import poolIcon from "../assets/iconp.png";
-import houseIcon from "../assets/iconh.png";
+import houseIcon from "../assets/iconwf.png";
 import condoIcon from "../assets/iconc.png";
 import poolIconHover from "../assets/iconph.png";
-import houseIconHover from "../assets/iconhh.png";
+import houseIconHover from "../assets/iconwfh.png";
 import condoIconHover from "../assets/iconch.png";
 import newImage1 from "../assets/newImage1.jpg";
 import newImage2 from "../assets/newImage2.jpg";
@@ -130,9 +130,7 @@ import Footer from './Footer';
             Water Features
           </p>
           <p className={`text-sm mt-4 text-center ${hover1 ? 'text-white' : 'text-[#A29D9D]'}`}>
-          We stand ready to turn your vision into a living reality. Our home construction services 
-          are crafted with the understanding that a home is more than just a structure
-          </p>
+          Elevate your environment with the captivating charm of water in motion, tailored to embody your vision of a perfect aquatic masterpiece.</p>
         </motion.div>
 
         {/* Container 2 */}

@@ -13,7 +13,7 @@ import alarmIcon from "../assets/alarm.png";
 import phoneIcon from "../assets/phone.png";
 import emailIcon from "../assets/email.png";
 import locationIcon from "../assets/location.png";
-
+import Footer from './Footer';
 
 const Contact = () => {
   const [hover1, setHover1] = useState(false);
@@ -82,7 +82,7 @@ const Contact = () => {
             <img src={locationIcon} alt="Image 1" className="h-30 w-28 object-cover rounded-md mb-4" />
             <div className="text-center">
                 <h1 className="text-m font-bold text-black mb-2">LOCATION</h1>
-                <p className="text-sm text-[#A29D9D]">163 Flamengco ST. Panghulo, Obando,Bulacan</p>
+                <p className="text-sm text-[#A29D9D]">161 Flamengco ST. Panghulo, Obando,Bulacan</p>
             </div>
             </div>
         </div>
@@ -104,7 +104,7 @@ const Contact = () => {
       <div className="hidden md:block md:w-1/2 rounded-lg" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}></div>
 
     </div>
-        
+        <Footer/>
     </div>
   );
 };

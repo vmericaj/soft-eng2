@@ -75,7 +75,7 @@ const AboutUs = () => {
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.2)', 
-    zIndex: 1, 
+  
   };
 
   const hoverTextStyle = {
