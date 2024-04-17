@@ -531,7 +531,7 @@ const resetFormState = () => {
     <img src={logo} alt="Logo" className="h-14 w-14" />
 </div>
 <div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-lg">
-    ADD PROJECT
+    ADD EMPLOYEES
 </div>
 
 <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl mx-auto">

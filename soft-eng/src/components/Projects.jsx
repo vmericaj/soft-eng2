@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logoImage from '../assets/se.png';
@@ -145,7 +145,7 @@ const projectData = [
     id: 23,
     name: 'PRIVATE RESIDENCE',
     image: image23,
-    location: 'PASIG CITY',
+    location: 'Pasig City',
     scope: 'Supply and Installation of Wood Cladding',
   },
 
@@ -161,73 +161,56 @@ const projectData = [
 const ProjectCard = ({ project }) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  ProjectCard.propTypes = {
-    project: PropTypes.shape({
-      image: PropTypes.string,
-      name: PropTypes.string,
-      description: PropTypes.string,
-      location: PropTypes.string,
-      startDate: PropTypes.string,
-      endDate: PropTypes.string,
-      budget: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // if budget is a number, change as needed
-    }).isRequired,
+  const handleToggleDetails = () => {
+    setShowDetails(prevShowDetails => !prevShowDetails);
   };
 
-   const handleToggleDetails = () => {
-      setShowDetails(!showDetails);
-    };
-
-    return (
-      <div className="project-card">
-        <img src={project.image} alt={project.name} className="project-image"/>
-        <div className="project-title-overlay">
-        <h3 className="project-title"style={{ marginTop: '0'}}>{project.name}</h3>
+  return (
+    <div className="project-card">
+      <img src={project.image} alt={project.name} className="project-image"/>
+      <div className="project-title-overlay">
+        <h3 className="project-title" style={{ marginTop: '0'}}>{project.name}</h3>
         <button className="toggle-details-button" onClick={handleToggleDetails}>
-        <IoIosArrowDropdownCircle className={`${showDetails ? 'rotate' : ''}`} />
+          <IoIosArrowDropdownCircle className={`${showDetails ? 'rotate' : ''}`} />
         </button>
       </div>
       <div className={`project-details-overlay ${showDetails ? 'project-details-visible' : ''}`}>
-              {/* Content that you want to show/hide goes here */}
-              <div className="project-details"style={{ marginTop: '0'}}>
-                {/* Your project details */}
-                        <p><span className="highlight">LOCATION:</span> {project.location}</p>
-                        <p><span className="highlight">SCOPE OF WORKS:</span> {project.scope}</p>
-              </div>
-            </div>
+        <div className="project-details" style={{ marginTop: '0'}}>
+          <p><span className="highlight">LOCATION:</span> {project.location}</p>
+          <p><span className="highlight">SCOPE OF WORKS:</span> {project.scope}</p>
         </div>
-    );
-  };
+      </div>
+    </div>
+  );
+};
 
-  const overlayStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)', 
-  };
+const overlayStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.2)', 
+};
 
 const Project = () => {
   return (
-  <div>
-    <header className=" shadow-lg w-full rounded-s mt-4 mx-auto max-w-8xl">
-      <nav className="px-6 py-3 flex justify-between items-center w-full">
-        <div className="flex items-center space-x-2">
-          <img src={logoImage} alt="Logo" className="h-12 w-18" />
-          <span className="text-xl font-semibold text-[#FDA00A] ">3MV Construction</span>
-        </div>
-        <div className="flex items-center">
-          <div className="flex space-x-4">
-            {/* Replace <a> with <Link> and remove href attribute */}
-            <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
-            <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
-            <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
-            <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
-            <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
+    <div>
+      <header className=" shadow-lg w-full rounded-s mt-4 mx-auto max-w-8xl">
+        <nav className="px-6 py-3 flex justify-between items-center w-full">
+          <div className="flex items-center space-x-2">
+            <img src={logoImage} alt="Logo" className="h-12 w-18" />
+            <span className="text-xl font-semibold text-[#FDA00A] ">3MV Construction</span>
           </div>
-                  
-                  {/* Login Button - If it navigates to a login page, consider using Link */}
-                  <Link to="/login">
+          <div className="flex items-center">
+            <div className="flex space-x-4">
+              <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
+              <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
+              <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
+              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
+              <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
+            </div>
+            <Link to="/login">
               <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
                 Login
               </button>
@@ -235,7 +218,7 @@ const Project = () => {
           </div>
         </nav>
       </header>
-            
+      
       <div className="mt-4 mx-auto max-w-[92%] relative">
         <div className="absolute z-10 w-full h-full flex items-center justify-center">
           <h1 className="text-4xl font-bold text-white">PROJECTS</h1>
@@ -245,18 +228,18 @@ const Project = () => {
       </div>
 
       <div className="project-container grid grid-cols-3 gap-0 py-10 ">
-      {projectData.map(project => (
+        {projectData.map(project => (
           <ProjectCard key={project.id} project={project} />
         ))}
-        
       </div>
-        
-        <PopupChatWindow/>
-        <Footer/>
+
+      <div className="chat-icon" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: '9999' }}>
+        <PopupChatWindow />
+      </div>
+
+      <Footer />
     </div>
   );
 };
 
-
-
-export default Project; 
+export default Project;

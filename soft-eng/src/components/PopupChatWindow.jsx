@@ -59,11 +59,11 @@ function PopupChatWindow() {
           switch (messageType) {
             case "one":
               questionText = "How much do your services cost?";
-              newMessage = "Our services start at $1000. Please contact us for a detailed quote.";
+              newMessage = "Please contact us for a detailed quote.";
               break;
             case "two":
               questionText = "Where is your store located?";
-              newMessage = "We are located at 163 Flamenco ST. Panghulo, Obando. Visit us anytime during our working hours.";
+              newMessage = "We are located at 161 Flamenco ST. Panghulo, Obando. Visit us anytime during our working hours.";
               break;
             case "three":
               questionText = "What services are available?";
@@ -117,10 +117,10 @@ function PopupChatWindow() {
         }, [showChat]);
 
     return (
-        <div className={`fixed bottom-16 right-2 z-50`}>
-      <img src={chatBotIcon} alt="Chatbot Icon" className={`w-13 h-11 fixed bottom-4 right-4 cursor-pointer hover:scale-110 active:scale-75 transition-transform`} onClick={toggleForm} />
-      <div className={`chat-popup transform transition-all duration-300 ease-in-out ${showChat ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'} right-2 bg-white shadow-xl rounded-md overflow-hidden z-10`}
-           style={{ width: '390px', height: '535px', bottom: 'calc(100px + 4rem * ${showChat ? 1 : 0})'}}>
+      <div style={{ pointerEvents: 'none', position: 'fixed', bottom: 16, right: 2, zIndex: 20 }}>
+      <img src={chatBotIcon} alt="Chatbot Icon" className="w-13 h-11 cursor-pointer hover:scale-110 active:scale-75 transition-transform" onClick={toggleForm} style={{ pointerEvents: 'auto' }} />
+      <div className={`chat-popup transform transition-all duration-300 ease-in-out ${showChat ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'} bg-white shadow-xl rounded-md overflow-hidden fixed bottom-4 right-4`}
+           style={{ width: '390px', height: '535px', pointerEvents: showChat ? 'auto' : 'none' }}>
           <div className="chat-header bg-blue-900 text-white p-3 rounded-t-md flex justify-between items-center">
               <div className="chat-header-content flex items-center">
                   <img src={logoIcon} alt="Logo" className="w-12 mr-2" />

@@ -503,7 +503,7 @@ const toggleNotifications = () => {
         <img src={logo} alt="Logo" className="h-14 w-14" />
     </div>
     <div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-lg">
-        ADD PROJECT
+        ADD CUSTOMERS
     </div>
 
 
