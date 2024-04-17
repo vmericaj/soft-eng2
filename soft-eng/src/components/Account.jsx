@@ -148,7 +148,7 @@ const handleEmailBlur = (e) => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black">
         {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
@@ -195,10 +195,10 @@ const handleEmailBlur = (e) => {
       {/* Content Area */}
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         {/* Header */}
-                <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
+                <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b">
           <div className="flex items-center">
             <VscAccount className="mr-2 w-6 h-6 text-customBlue" />
-            <h1 className="text-xl font-bold text-customBlue dark:text-white">ACCOUNT</h1>
+            <h1 className="text-xl font-bold text-customBlue">ACCOUNT</h1>
           </div>
           <div className="flex items-center space-x-2">
             {profilePic && (

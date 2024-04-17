@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'login': "url('../assets/BG.jpg')",
+      },
       colors: {
         customOrange: '#EF9400', // Adding your custom color here
         customBlue: '#0F076D',

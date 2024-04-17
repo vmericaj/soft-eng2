@@ -1,15 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import backgroundImage from "../assets/BG.jpg"; // replace with your actual image path
 import someImage from "../assets/Facebook.png";
 import logo from "../assets/se.png";
 import someImage1 from "../assets/Google.png";
 import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:5000/api/signin', formData); // Replace '/api/send-email' with your backend API endpoint
+      setLoggedIn(true);
+    } catch (error) {
+      console.error('Error singing in:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Invalid email or password.'
+      });
+    }
+  };
+
+  if (loggedIn) {
+    // Redirect to dashboard route if logged in
+    return <Navigate to="/inventory" />;
+  }
+
   return (
     <div 
-      className="flex justify-center items-center h-screen bg-no-repeat bg-cover" 
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="flex justify-center items-center h-screen bg-no-repeat bg-cover bg-login" 
     >
       {/* Left column for text */}
       <div className="w-1/2 pl-20 pr-12 pt-12 pb-12 text-white">
@@ -33,7 +66,7 @@ const Login = () => {
 
       {/* Right column for the form */}
       <div className="w-1/2 mx-auto rounded p-12">
-        <form className="space-y-6 mx-auto w-96">
+        <form className="space-y-6 mx-auto w-96" onSubmit={handleSubmit}>
         <div className="flex justify-center mb-6">
               {/* Make logo clickable by wrapping with Link */}
               <Link to="/"> {/* Replace with your destination path */}
@@ -43,6 +76,8 @@ const Login = () => {
           <input
             id="email-address"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             type="email"
             autoComplete="email"
             required
@@ -52,6 +87,8 @@ const Login = () => {
           <input
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleChange}
             type="password"
             autoComplete="password"
             required
@@ -71,19 +108,19 @@ const Login = () => {
                 </span>
                 </label>
                 <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link to="/recovery" className="font-medium text-indigo-600 hover:text-indigo-500">
                     Forgot Password?
-                </a>
+                </Link>
                 </div>
           </div>
           
           {/* Include other form elements here */}
-          <Link
-            to="/inventory" // Replace "/your-target-path" with the actual path you want to navigate to
+          <button
+            type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-[#EF9400] bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             LOG IN
-          </Link>
+          </button>
           {/* Include other buttons or links here */}
           <div className="flex flex-col items-center space-y-6 mx-auto w-96">
                 {/* Separator with text */}

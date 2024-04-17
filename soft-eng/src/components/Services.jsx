@@ -269,7 +269,7 @@ const Services = () => {
       <div ref={rowRefs.row1} style={{ ...rowStyle, ...getRowAnimationStyle('row1') }}>
         <div style={textSectionStyle}>
            <Line /> {/* Add the line here */}
-          <h2 style={titleStyle}>Dsigning Dream Spaces Inside and Out.</h2>
+          <h2 style={titleStyle}>Designing Dream Spaces Inside and Out.</h2>
           <p style={descriptionStyle}>Behold the transformation into a grand, open-plan sanctuary where marble floors gleam beneath a symphony of natural light. Every corner of the home, from the expansive living area to the sleek gourmet kitchen, has been meticulously reimagined to exude sophistication and seamless flow.</p>
           {/* ... other text content ... */}
         </div>
