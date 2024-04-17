@@ -331,7 +331,7 @@ const resetFormState = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       {/* ... sidebar content ... */}
-      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black ">
         {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
@@ -378,10 +378,10 @@ const resetFormState = () => {
       <div className="flex flex-col flex-1">
         {/* Header */}
         {/* ... header content ... */}
-        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600 relative">
+        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b relative">
         <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
           <BsFillPersonVcardFill className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
-          <h1 className="text-xl font-bold text-customBlue dark:text-white">EMPLOYEES</h1> {/* Text */}
+          <h1 className="text-xl font-bold text-customBlue">EMPLOYEES</h1> {/* Text */}
           <button className="ml-4 relative" onClick={toggleNotifications}>
   <MdNotificationsActive className="w-6 h-6 text-customOrange" />
   {notifications.length > 0 && (
