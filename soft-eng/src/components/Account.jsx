@@ -6,200 +6,469 @@ import { MdInventory2 } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import { BsFillPersonVcardFill } from "react-icons/bs";
 import { VscAccount } from "react-icons/vsc";
-
-const EditableField = ({ label, type, value, onSave }) => {
-  const [editMode, setEditMode] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  const handleEdit = () => {
-    setEditMode(true);
-  };
-
-  const handleSave = () => {
-    onSave(inputValue);
-    setEditMode(false);
-  };
-
-  return (
-    <div className="flex items-center mb-4">
-      <label className="mr-4">{label}:</label>
-      <div className="flex items-center">
-        {editMode ? (
-          <div className="flex flex-col">
-            <input
-              className="border px-2 py-1 rounded mb-2"
-              type={type}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-              style={{ backgroundColor: '#0F076D' }}
-              onClick={handleSave}
-            >
-              Done
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center">
-            <span>{value}</span>
-            <button
-              className="ml-2 p-1 rounded border flex items-center justify-center"
-              onClick={handleEdit}
-            >
-              🖉 {/* Minimalistic pencil icon */}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+import { FaUser } from "react-icons/fa";
+import { BsPencilSquare } from "react-icons/bs";
+import { useUser } from '../components/UserContext';
 
 const Account = () => {
-  const [profilePic, setProfilePic] = useState(null);
-  const [name, setName] = useState('Juan Dela Cruz');
-  const [email, setEmail] = useState('juandelacruz@gmail.com');
-  const [mobile, setMobile] = useState('123456789');
-  const [birthday, setBirthday] = useState('01-02-1234');
-  const [address, setAddress] = useState({
-    building: '123',
-    street: 'Main Street',
-    barangay: 'San Juan',
-    province: 'Metro Manila',
-    postalCode: '123',
-  });
-  const [age, setAge] = useState(30);
+  
+  const [email, setEmail] = useState('juandelacruz@example.com');
+  const [mobile, setMobile] = useState('+63 916 303 3987');
+  const [age, setAge] = useState(20);
+  const [birthday, setBirthday] = useState('1990-01-01');
+  
+  const { name, setName, profilePic, updateUser } = useUser();
+  const [street, setStreet] = useState('Street Address');
+  const [city, setCity] = useState('City/Municipality');
+  const [province, setProvince] = useState('Province');
+  const [apt, setApt] = useState('Apt,Suite,Building');
+  const [brgy, setBrgy] = useState('Barangay');
+  const [postal, setPostal] = useState('Postal Code');
+  
+  
+  const [isAddressEditing, setIsAddressEditing] = useState(false);
 
+  // Toggle editing for address
+  const toggleAddressEdit = () => {
+    setIsAddressEditing(!isAddressEditing);
+  };
+
+  // Save function for address (if separate actions needed)
+  const saveAddressChanges = () => {
+    setIsAddressEditing(false);
+    // Additional logic for saving address, if different from general save
+    console.log('Address saved:', { bldghouse, city });
+  };
+
+  // State to track editing mode
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Function to handle file input for profile pictures
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result);
-      };
-      reader.readAsDataURL(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            updateUser({ profilePic: reader.result });
+        };
+        reader.readAsDataURL(file);
     }
+};
+
+const handleNameChange = (e) => {
+  console.log("Changing name to:", e.target.value);
+  setName(e.target.value);
+};
+
+
+  // Function to handle saving changes
+  const saveChanges = () => {
+    setIsEditing(false);
+    // Here you would typically make an API call to update the user's account details
+    console.log('Saved:', { name, email,mobile });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Changes saved');
+  // Function to toggle editing mode
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
   };
+
+  const handleAgeChange = (newAge) => {
+    const newBirthday = new Date();
+    newBirthday.setFullYear(new Date().getFullYear() - newAge);
+    newBirthday.setHours(0, 0, 0, 0); // Normalize the time part to avoid timezone issues
+    setBirthday(newBirthday.toISOString().split('T')[0]);
+    setAge(newAge);
+  };
+  
+  const handleBirthdayChange = (newBirthday) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const birthDate = new Date(newBirthday);
+    let newAge = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      newAge--;
+    }
+    setBirthday(newBirthday);
+    setAge(newAge);
+  };
+  
+  const provinces = [
+    "Abra", "Agusan del Norte", "Agusan del Sur", "Aklan", "Albay",
+    "Antique", "Apayao", "Aurora", "Basilan", "Bataan",
+    "Batanes", "Batangas", "Benguet", "Biliran", "Bohol",
+    "Bukidnon", "Bulacan", "Cagayan", "Camarines Norte", "Camarines Sur",
+    "Camiguin", "Capiz", "Catanduanes", "Cavite", "Cebu",
+    "Compostela Valley", "Cotabato", "Davao del Norte", "Davao del Sur", "Davao Oriental",
+    "Dinagat Islands", "Eastern Samar", "Guimaras", "Ifugao", "Ilocos Norte",
+    "Ilocos Sur", "Iloilo", "Isabela", "Kalinga", "La Union",
+    "Laguna", "Lanao del Norte", "Lanao del Sur", "Leyte", "Maguindanao",
+    "Marinduque", "Masbate", "Misamis Occidental", "Misamis Oriental", "Mountain Province",
+    "Negros Occidental", "Negros Oriental", "Northern Samar", "Nueva Ecija", "Nueva Vizcaya",
+    "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Pampanga", "Pangasinan",
+    "Quezon", "Quirino", "Rizal", "Romblon", "Samar",
+    "Sarangani", "Siquijor", "Sorsogon", "South Cotabato", "Southern Leyte",
+    "Sultan Kudarat", "Sulu", "Surigao del Norte", "Surigao del Sur", "Tarlac",
+    "Tawi-Tawi", "Zambales", "Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay",
+    "Metro Manila"
+  ];
+
+  const handleMobileChange = (e) => {
+    let value = e.target.value;
+    // Strip all non-numeric characters
+    let numbers = value.replace(/\D/g, '');
+
+    // Check if it starts correctly with the country code, if not, prepend
+    if (!numbers.startsWith("63")) {
+        numbers = "63" + numbers;
+    }
+
+    // Add spaces or any other separators as needed
+    let formattedNumber = "+63 " + numbers.slice(2);
+    setMobile(formattedNumber);
+};
+
+const handleEmailChange = (e) => {
+  setEmail(e.target.value); // Just store the value as the user types
+};
+
+const handleEmailBlur = (e) => {
+  let value = e.target.value.trim();
+  // Check if there's text and no "@" symbol, then append "@gmail.com"
+  if (value && !value.includes('@')) {
+      value += "@gmail.com";
+      setEmail(value);
+  }
+};
+
+
+  
 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black">
         {/* Logo and title */}
-        <div className="flex items-center space-x-2">
-          <img src={logo} alt="Logo" className="h-14 w-14" />
-          <h1 className="text-xl font-bold text-customOrange">3MV CONSTRUCTION</h1>
-        </div>
-        {/* Sidebar navigation */}
-        <nav>
+          <div className="flex items-center space-x-2" >
+            <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
+            <h1 className="text-xl font-bold" style={{ color: '#EF9400' }}>3MV CONSTRUCTION</h1>
+          </div>
+        <div className="flex flex-col justify-between flex-1 mt-6">
+          <nav>
           <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
-            <TfiDashboard className="mr-2" />
+            <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/projecttable" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
+          
           <Link to="/customers" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <IoPersonSharp className="mr-2" /> 
             CUSTOMERS
-          </Link>
+            </Link>
+
           <Link to="/employees" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <BsFillPersonVcardFill className="mr-2" /> 
             EMPLOYEES
-          </Link>
+            </Link>
           <Link to="/account" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <VscAccount className="mr-2" /> 
             ACCOUNT
+            </Link>
+          
+          </nav>
+
+          <div className="flex items-center px-4 -mx-2">
+          <Link
+            to="/"  // Change "/logout" to your desired path
+            className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white"
+          >
+            <span>LOGOUT</span>
           </Link>
-        </nav>
-        {/* Logout button */}
-        <div className="flex items-center px-4 -mx-2 mt-auto"> {/* Added mt-auto to push the button to the bottom */}
-          <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-                <span>LOGOUT</span>
-          </Link>
+          </div>
         </div>
       </div>
 
       {/* Content Area */}
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
+                <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b">
           <div className="flex items-center">
             <VscAccount className="mr-2 w-6 h-6 text-customBlue" />
-            <h1 className="text-xl font-bold text-customBlue dark:text-white">ACCOUNT</h1>
+            <h1 className="text-xl font-bold text-customBlue">ACCOUNT</h1>
           </div>
           <div className="flex items-center space-x-2">
-            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
-            <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
+            {profilePic && (
+              <img
+                src={profilePic}
+                alt="Profile"
+                className="rounded-full h-8 w-8 object-cover"
+              />
+            )}
             <span>{name}</span>
           </div>
         </div>
 
+
         {/* Main Content */}
         <div className="flex-1 p-6 bg-white overflow-y-auto">
-          {/* Account Details */}
-          <div className="h-screen bg-gray-100 flex justify-center items-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-              <h2 className="text-2xl font-bold mb-6" style={{ color: '#0F076D' }}>Manage Account</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col items-center">
-                  <div className="w-48 h-48 bg-gray-200 rounded-full overflow-hidden">
-                    {profilePic ? (
-                      <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="flex justify-center items-center h-full text-gray-400">
-                        No photo
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <label htmlFor="file-upload" className="mt-4 cursor-pointer bg-gray-200 text-gray-800 px-3 py-1 rounded-lg hover:bg-gray-300">
-                    Upload Photo
-                  </label>
-                </div>
-                <div>
-                  <form onSubmit={handleSubmit}>
-                    <EditableField label="Name" type="text" value={name} onSave={setName} />
-                    <EditableField label="Email Address" type="email" value={email} onSave={setEmail} />
-                    <EditableField label="Mobile" type="text" value={mobile} onSave={setMobile} />
-                    <EditableField label="Birthday" type="date" value={birthday} onSave={setBirthday} />
-                    <EditableField label="Age" type="number" value={age} onSave={setAge} />
-                    <div className="mt-4">
-                      <h3 className="text-lg font-bold mb-2" style={{ color: '#0F076D' }}>Address</h3>
-                      <EditableField label="Building/House No." type="text" value={address.building} onSave={(value) => setAddress({ ...address, building: value })} />
-                      <EditableField label="Street Name" type="text" value={address.street} onSave={(value) => setAddress({ ...address, street: value })} />
-                      <EditableField label="Barangay" type="text" value={address.barangay} onSave={(value) => setAddress({ ...address, barangay: value })} />
-                      <EditableField label="Province" type="text" value={address.province} onSave={(value) => setAddress({ ...address, province: value })} />
-                      <EditableField label="Postal Code" type="text" value={address.postalCode} onSave={(value) => setAddress({ ...address, postalCode: value })} />
-                    </div>
-                    <button
-                      type="submit"
-                      className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      style={{ backgroundColor: '#0F076D' }}
-                    >
-                      Save Changes
-                    </button>
-                  </form>
-                </div>
+          <div className="flex items-start space-x-4 bg-white p-4 rounded-lg shadow-md">
+            {/* Left Column for Profile Picture and Buttons */}
+            <div className="flex flex-col items-center w-1/3 space-y-4">
+              <div className="rounded-full bg-gray-200 overflow-hidden h-32 w-32">
+                <img src={profilePic || '/path-to-default-avatar.png'} alt="upload" className="object-cover h-full w-full" />
+              </div>
+              <div className={`flex flex-col space-y-2 ${isEditing ? 'space-y-2' : 'space-y-4'}`}>
+                <label className="cursor-pointer bg-customBlue text-white text-sm font-bold py-2 px-4 rounded inline-block text-center">
+                  Upload Picture
+                  <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                </label>
+                <button
+                  className={`bg-green-600 text-white font-bold py-1 px-4 rounded ${isEditing ? 'block' : 'hidden'}`}
+                  onClick={saveChanges}
+                >
+                  Save
+                </button>
+                <button
+                  className={`bg-red-700  text-white font-bold py-1 px-4 rounded ${isEditing ? 'hidden' : 'block'}`}
+                  onClick={toggleEdit}
+                >
+                  Edit
+                </button>
               </div>
             </div>
+            {/* Account Details Section */}
+            <div className="w-2/3">
+                  <h1 className="text-2xl font-semibold text-customBlue mb-6">Account Details</h1>
+                  <div className="flex flex-wrap -mx-2">
+                  <div className="mb-6 px-2 w-1/2">
+  <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="name">
+    Name
+  </label>
+  {isEditing ? (
+    <input
+      id="name"
+      type="text"
+      value={name}
+      onChange={(e) => setName(e.target.value)}  // Directly updates the name in the UserContext
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    />
+  ) : (
+    <span>{name}</span>
+  )}
+</div>
+
+
+          <div className="mb-6 px-2 w-1/2">
+          <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="age">Age</label>
+            {isEditing ? (
+              <select
+                id="age"
+                value={age}
+                onChange={(e) => handleAgeChange(Number(e.target.value))}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              >
+                {/* Generate age options */}
+                {Array.from({ length: 83 }, (_, i) => 18 + i).map((ageOption) => (
+                  <option key={ageOption} value={ageOption}>
+                    {ageOption}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <span>{age}</span>
+            )}
           </div>
+
+          <div className="mb-6 px-2 w-1/2">
+              <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="email">
+                  Email Address
+              </label>
+              {isEditing ? (
+                  <input
+                      id="email"
+                      type="text"
+                      value={email}
+                      onChange={handleEmailChange}
+                      onBlur={handleEmailBlur}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+              ) : (
+                  <span>{email}</span>
+              )}
+          </div>
+
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="birthday">Birthday</label>
+            {isEditing ? (
+              <input
+                type="date"
+                id="birthday"
+                value={birthday}
+                onChange={(e) => handleBirthdayChange(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{new Date(birthday).toLocaleDateString()}</span>
+            )}
+          </div>
+          <div className="mb-6 px-2 w-1/2">
+              <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="mobile">
+                  Mobile Number
+              </label>
+              {isEditing ? (
+                  <input
+                      id="mobile"
+                      type="text"
+                      value={mobile}
+                      onChange={handleMobileChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+              ) : (
+                  <span>{mobile}</span>
+              )}
+          </div>
+
+          </div>      
+            </div>
         </div>
+        {/* Address Details Section */}
+        <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-customBlue mb-6">Address</h1>
+          {isAddressEditing ? (
+            <button
+              className="bg-green-600 text-white font-bold py-1 px-4 rounded mb-6"
+              onClick={saveAddressChanges}
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              className="bg-red-700 text-white font-bold py-1 px-4 rounded mb-6"
+              onClick={toggleAddressEdit}
+            >
+              <BsPencilSquare /> 
+            </button>
+          )}
+        </div>
+        <div className="flex flex-wrap -mx-2">
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="street">
+              Street Address
+            </label>
+            {isAddressEditing ? (
+              <input
+                id="street"
+                type="text"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{street}</span>
+            )}
+          </div>
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="apt">
+              Apt, Suite, Building
+            </label>
+            {isAddressEditing ? (
+              <input
+                id="apt"
+                type="text"
+                value={apt}
+                onChange={(e) => setApt(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{apt}</span>
+            )}
+          </div>
+          <div className="mb-6 px-2 w-1/2">
+              <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="province">
+                Province
+              </label>
+              {isAddressEditing ? (
+                <select
+                  id="province"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  {provinces.map((prov) => (
+                    <option key={prov} value={prov}>
+                      {prov}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span>{province}</span>
+              )}
+            </div>
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="city">
+              City/Municipality 
+            </label>
+            {isAddressEditing ? (
+              <input
+                id="city"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{city}</span>
+            )}
+          </div>
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="brgy">
+              Barangay 
+            </label>
+            {isAddressEditing ? (
+              <input
+                id="brgy"
+                type="text"
+                value={brgy}
+                onChange={(e) => setBrgy(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{brgy}</span>
+            )}
+          </div>
+          <div className="mb-6 px-2 w-1/2">
+            <label className="block text-gray-700 text-xs font-bold mb-2" htmlFor="postal">
+              Postal Code
+            </label>
+            {isAddressEditing ? (
+              <input
+                id="postal"
+                type="text"
+                value={postal}
+                onChange={(e) => setPostal(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            ) : (
+              <span>{postal}</span>
+            )}
+          </div>
+          
+        </div>
+        
       </div>
-    </div>
+        <div>
+
+        </div>
+        
+        </div>
+        
+        </div>
+        </div>
   );
 };
 

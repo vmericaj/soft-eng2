@@ -42,8 +42,7 @@ const Login = () => {
 
   return (
     <div 
-      className="flex justify-center items-center h-screen bg-no-repeat bg-cover" 
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="flex justify-center items-center h-screen bg-no-repeat bg-cover bg-login" 
     >
       {/* Left column for text */}
       <div className="w-1/2 pl-20 pr-12 pt-12 pb-12 text-white">

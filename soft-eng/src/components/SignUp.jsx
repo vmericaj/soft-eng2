@@ -66,7 +66,7 @@ const SignUp = () => {
   return (
     <div 
       className="flex justify-center items-center h-screen" 
-      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}
+      style={{ backgroundImage: 'url(${backgroundImage})', backgroundSize: 'cover' }}
     >
       <div className=" bg-white rounded p-8 m-4 max-w-lg w-full space-y-8">
         <div className="text-center">
@@ -222,4 +222,3 @@ const SignUp = () => {
   };
   
   export default SignUp;
-  

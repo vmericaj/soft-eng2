@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 // Import your logo image
 import logoImage from '../assets/se.png';
 import backgroundImage from "../assets/BG.jpg";
@@ -83,7 +83,7 @@ const CreateAccount = () => {
         </div>
         {password && confirmPassword && password !== confirmPassword && (
           <p className="text-red-500 text-sm mt-2">
-            Password didn't match. Try again.
+            Password didnt match. Try again.
           </p>
         )}
         <button
@@ -98,4 +98,3 @@ const CreateAccount = () => {
 };
 
 export default CreateAccount;
-

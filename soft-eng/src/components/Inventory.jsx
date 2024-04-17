@@ -11,19 +11,20 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { useUser } from '../components/UserContext';
 
 // ... other imports ...
 
 const Inventory = () => {
   const [value, setValue] = React.useState(dayjs());
+  const { name, setName, profilePic, updateUser } = useUser();
 
-    
 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       {/* ... sidebar content ... */}
-      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:border-gray-600">
         {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
@@ -37,7 +38,7 @@ const Inventory = () => {
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/projecttable" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -75,17 +76,23 @@ const Inventory = () => {
       <div className="flex flex-col flex-1">
         {/* Header */}
         {/* ... header content ... */}
-        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600">
+        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b ">
         <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
           <TfiDashboard className="mr-2 w-8 h-8 text-customBlue" /> {/* Icon */}
-          <h1 className="text-xl font-bold text-customBlue dark:text-white">DASHBOARD</h1> {/* Text */}
+          <h1 className="text-xl font-bold text-customBlue ">DASHBOARD</h1> {/* Text */}
         </div>
-          <div className="flex items-center space-x-2">
-            {/* Search box */}
-            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
-            <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
-            <span>Juan Dela Cruz</span>
-          </div>
+        <div className="flex items-center space-x-2">
+          {profilePic && (
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="rounded-full h-8 w-8 object-cover"  // Ensures the image is circular and fits within the dimensions
+            />
+          )}
+
+          {/* Display the user's name next to the image */}
+          <span>{name}</span>
+        </div>
         </div>
 
         {/* Main Content */}
@@ -107,23 +114,34 @@ const Inventory = () => {
           </div>
           
           {/* Projects */}
-          <div className="bg-customBlue rounded-xl shadow-lg p-4 h-42 flex justify-center items-center">
-          <MdInventory2 className="text-4xl text-white" />
-          </div>
+        
+          <Link to="/projecttable">
+            <div className="bg-customBlue rounded-xl shadow-lg p-2 h-full flex justify-center items-center">
+              <MdInventory2 className="text-4xl text-white" />
+            </div>
+          </Link>
 
-          {/* New Box Below Projects */}
-          <div className="bg-customOrange rounded-xl shadow-lg p-4 h-42 flex justify-center items-center">
-          <IoPersonSharp className="text-4xl text-white" />
+          <Link to="/customers">
+          <div className="bg-customOrange rounded-xl shadow-lg p-2 h-full flex justify-center items-center">
+            <IoPersonSharp className="text-4xl text-white" />
           </div>
+          </Link>
+
           {/* Employees */}
-          <div className="bg-customOrange rounded-xl shadow-lg p-4 h-39 flex justify-center items-center">
+
+          <Link to="/employees">
+          <div className="bg-customOrange rounded-xl shadow-lg p-4 h-full flex justify-center items-center">
           <BsFillPersonVcardFill className="text-4xl text-white" />
           </div>
+          </Link>
 
           {/* Account */}
-          <div className="bg-customBlue rounded-xl shadow-lg p-4 h-38 flex justify-center items-center">
+          <Link to="/account">
+          <div className="bg-customBlue rounded-xl shadow-lg p-4 h-full flex justify-center items-center">
           <VscAccount className="text-4xl text-white" />
           </div>
+          </Link>
+
         </div>
         </div>
       </div>

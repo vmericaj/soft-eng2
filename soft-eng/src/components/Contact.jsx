@@ -15,6 +15,7 @@ import emailIcon from "../assets/email.png";
 import locationIcon from "../assets/location.png";
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Footer from "../components/Footer.jsx"
 
 
 const Contact = () => {
@@ -134,12 +135,11 @@ const Contact = () => {
           <button className="w-full p-2 bg-[#EF9400] text-white font-bold rounded-lg">SUBMIT</button>
         </form>
       </div>
-      <div className="hidden md:block md:w-1/2 rounded-lg" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}></div>
+      <div className="hidden md:block md:w-1/2 rounded-lg" style={{ backgroundImage: 'url(${backgroundImage})', backgroundSize: 'cover', }}></div>
     </div>
-        
+      <Footer/>
     </div>
   );
 };
 
 export default Contact;
-   

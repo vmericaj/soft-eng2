@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from "../assets/se.png";
 import { motion } from 'framer-motion';
-import sercondo from '../assets/sercondo.jpg';
-import serhomes from '../assets/serhomes.jpg';
-import serpool from '../assets/serpool.jpg';
-import aboutHeader from "../assets/header.png";
+import sercondo from '../assets/1.png';
+import serhomes from '../assets/9.png';
+import serpool from '../assets/10.png';
+import aboutHeader from "../assets/arista.png";
+import PopupChatWindow from './PopupChatWindow';
+import Footer from './Footer';
+
 
 const AboutUs = () => {
   const containerShadowStyle = {
@@ -64,8 +67,16 @@ const AboutUs = () => {
   const hoverContainerStyle = {
     backgroundImage: 'linear-gradient(#E6D4A5 0%, #A9CBD0 50%)', // Smooth blend with more of #E6D4A5
   };
-  
 
+  const overlayStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)', 
+  
+  };
 
   const hoverTextStyle = {
     color: 'black', // Change text color to orange on hover
@@ -86,16 +97,16 @@ const AboutUs = () => {
           <div className="flex items-center">
             <div className="flex space-x-4">
               {/* Replace <a> with <Link> and remove href attribute */}
-              <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-              <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">About</Link>
-              <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Services</Link>
-              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Projects</Link>
-              <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
+              <Link to="/" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Home</Link>
+              <Link to="/about" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">About</Link>
+              <Link to="/services" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Services</Link>
+              <Link to="/projects" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Projects</Link>
+              <Link to="/contact" className="text-black hover:text-customOrange px-3 py-2 rounded-md text-sm font-medium hover:scale-110 active:scale-75 transition-transform">Contact</Link>
             </div>
             
             {/* Login Button - If it navigates to a login page, consider using Link */}
             <Link to="/login">
-              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300">
+              <button className="bg-[#FDA00A] hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300 hover:scale-110 active:scale-75 transition-transform">
                 Login
               </button>
             </Link>
@@ -108,6 +119,7 @@ const AboutUs = () => {
           <h1 className="text-4xl font-bold text-white">ABOUT US</h1>
         </div>
         <img src={aboutHeader} alt="about" className="w-full h-auto rounded-xl shadow-lg"/>
+        <div style={overlayStyle}></div>
       </div>
       
       {/* containers */}
@@ -121,7 +133,12 @@ const AboutUs = () => {
           <img src={sercondo} alt="Condo" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverCondo ? hoverTextStyle : null}>
-              3MV Construction is not just a construction company; it is a partner in reshaping urban living through thoughtful condominium design, impeccable construction, and ongoing maintenance.
+            3MV Construction is a company in the Philippines that
+            specializes in designing and building different types of Swimming Pools and water
+            features such as fountains, ponds, artificial waterfalls, spa and the likes. We also
+            design, build and renovate quality and sustainable yet affordable houses, offices,
+            and condominium units. We also accept land development projects such as
+            resorts, commercial spaces, townhouses, subdivisions and farms.
             </p>
           </div>
         </div>
@@ -134,7 +151,12 @@ const AboutUs = () => {
           <img src={serhomes} alt="Homes" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverHomes ? hoverTextStyle : null}>
-              Our commitment to excellence is woven into every aspect of our work, ensuring that each home we touch becomes a testament to our dedication to quality, innovation, and client satisfaction.
+            Our expanded products adapt to a bigger market and meets the standards and
+            qualifications of different kinds of establishments like hotels, malls, offices, resorts,
+            residences to name a few. We develop and improve Water Technology in order to
+            incorporate recreational, relaxation and health beneficial technologies. We also
+            cater House construction and renovation and other architectural masonry works—
+            landscaping, hardscaping and softscaping.
             </p>
           </div>
         </div>
@@ -147,7 +169,9 @@ const AboutUs = () => {
           <img src={serpool} alt="Pool" className="max-w-full h-auto rounded-lg mx-auto" style={imageStyle} />
           <div className="p-4">
             <p className="text-xs transition-all duration-300" style={hoverPool ? hoverTextStyle : null}>
-              Whether you seek a tranquil retreat or a vibrant entertainment space, 3MV Construction is your trusted partner in transforming aquatic aspirations into breathtaking realities.
+            Quality, creativeness, comfort and value for money are the key inspirations and
+            goals of 3MV Construction. We work attentively with our clients’ perspective and
+            we meticulously apply our concept in order to come up with the agreed design.
             </p>
           </div>
         </div>
@@ -164,7 +188,7 @@ const AboutUs = () => {
             animate={{ opacity: showMission ? 1 : 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p style={textStyle}c>
+            <p style={textStyle}>
               At 3MV Construction, our mission is to be the beacon of excellence in the construction industry, dedicated to transforming dreams into enduring structures. We are committed to delivering innovative, sustainable, and high-quality solutions, driven by a passion for precision and an unwavering commitment to client satisfaction. Through a fusion of expertise, integrity, and cutting-edge practices, we aim to build not just structures but legacies that stand the test of time.
             </p>
           </motion.div>
@@ -189,6 +213,8 @@ const AboutUs = () => {
           </motion.div>
         </div>
       </div>
+      <PopupChatWindow className="fixed bottom-4 right-4 z-50" />
+      <Footer/>
     </div>
   );
 };

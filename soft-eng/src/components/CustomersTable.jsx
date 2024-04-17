@@ -9,11 +9,18 @@ import { VscAccount } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import { MdNotificationsActive } from "react-icons/md";
 import moment from 'moment';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { BsPencilSquare } from "react-icons/bs";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { useUser } from '../components/UserContext';
 
+function formatNumber(value) {
+  const number = parseFloat(value.replace(/,/g, ''));
+  if (isNaN(number)) {
+    return ""; // Return empty string if not a number
+  }
+  return number.toLocaleString(); // Convert to string with commas
+}
 
-// ... other imports ...
 
 const CustomersTable = () => {
     
@@ -34,31 +41,20 @@ const CustomersTable = () => {
   };
   
   
-  
-    const [projects, setProjects] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [projects, setProjects] = useState([]);
     const [newProject, setNewProject] = useState({
-        cid: '',
-        name: '',
-        number: '',
-        email: '',
-        project: '',
-        category: '',
-        total: '',
-        paid: '',
-        balance: '',
-        action: ''
-    });
-
-    useEffect(() => {
-      // Fetch data when the component mounts
-      fetch('http://localhost:5000/api/get/customers')
-      .then((response) => response.json())
-      .then((data) => {
-        setProjects(data.result);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-    }, []); // 
+    cid: '',
+    name: '',
+    number: '',
+    email: '',
+    project: '',
+    category: '',
+    total: '',
+    paid: '',
+    balance: '',
+    action: ''
+  });
     
     const [isEditing, setIsEditing] = useState(false);
     const [editIndex, setEditIndex] = useState(-1);
@@ -71,7 +67,8 @@ const CustomersTable = () => {
     const [currentAction, setCurrentAction] = useState('');
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-
+    const [alertColor, setAlertColor] = useState('green');
+    const { name, setName, profilePic, updateUser } = useUser();
 
     const [showNotifications, setShowNotifications] = useState(false);
     // Example notifications data
@@ -80,25 +77,33 @@ const CustomersTable = () => {
     ]);
     const createNotification = (message) => {
       const newNotification = {
-        id: Date.now(), // Using the current timestamp as a simple unique ID
-        message: message,
-        time: moment().fromNow() // This will display time as "a few seconds ago", etc.
+          id: Date.now(),
+          message: message,
+          time: moment().fromNow()
       };
       setNotifications(prevNotifications => [newNotification, ...prevNotifications]);
-    };
-    // ... other functions ...
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     const newValue = value.replace(/,/g, ''); // Remove commas before parsing
-  
-  //     // If the field being changed is 'paid', calculate the balance
-  //     if (name === "paid") {
-  //         const paidAmount = parseFloat(newValue) || 0; // Parse the paid value, defaulting to 0 if not a number
-  //         const totalAmount = parseFloat(newProject.total.replace(/,/g, '')) || 0; // Parse the total value, defaulting to 0 if not a number
-  //         const balanceAmount = totalAmount - paidAmount; // Calculate the balance
-          
-  //         // Format the balance to show commas as thousands separators
-  //         const formattedBalance = balanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+    
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+
+    if (name === "total" || name === "paid" || name === "balance") {
+      formattedValue = formatNumber(value); // Apply formatting
+    }
+
+    setNewProject({ ...newProject, [name]: formattedValue });
+
+    // Optionally, automatically update balance when total or paid changes
+    if (name === "total" || name === "paid") {
+      const total = parseFloat(newProject.total.replace(/,/g, '')) || 0;
+      const paid = parseFloat(newProject.paid.replace(/,/g, '')) || 0;
+      const balance = total - paid;
+      setNewProject(prev => ({ ...prev, balance: formatNumber(balance.toString()) }));
+    }
+  };
   
   //         // Update the state with the new paid amount and the formatted balance
   //         setNewProject({ ...newProject, [name]: newValue, balance: formattedBalance });
@@ -135,83 +140,46 @@ const CustomersTable = () => {
       setNotifications([...notifications, newNotification]);
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = (e) => {
       e.preventDefault();
-      try {
-        if (formData.edit == true){
-          await axios.post('http://localhost:5000/api/edit/customer', formData); // Replace '/api/add/project' with your backend API endpoint
-        }else{
-          await axios.post('http://localhost:5000/api/add/customer', formData); // Replace '/api/add/project' with your backend API endpoint
-        }
-        setShowForm(false);
-        if (formData.edit == true){
-          setCurrentAction('');
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Customer edited successfully',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              location.reload(); // Reload the page
-            }
-          });
-      }else{
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Customer added successfully',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            location.reload(); // Reload the page
-          }
-        });
-      }
-       
-      } catch (error) {
-        console.error(error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong. Please try again later.'
-        });
-      }
-    };
+  
+      const isUpdate = isEditing;
+      const updatedProjects = isUpdate ? projects.map((item, index) => 
+          index === editIndex ? newProject : item
+      ) : [...projects, newProject];
+  
+      setProjects(updatedProjects);
+      const actionMessage = isUpdate ? `Successfully updated customer '${newProject.name}'` : `Successfully added customer '${newProject.name}'`;
+  
+      setSuccessMessage(actionMessage);
+      setShowSuccessAlert(true);
+      setAlertColor(isUpdate ? 'orange' : 'green');  // Differentiate colors by action
+      setTimeout(() => setShowSuccessAlert(false), 3000);
+  
+      createNotification(actionMessage);
+  
+      resetFormState();
+      setShowForm(false);  // Hide the form after submission
+  };
+  
+  
+  const resetFormState = () => {
+    setNewProject({
+        cid: '',
+        name: '',
+        number: '',
+        email: '',
+        project: '',
+        category: '',
+        total: '',
+        paid: '',
+        balance: '',
+        action: ''
+    });
+    setIsEditing(false);
+    setEditIndex(-1);
+};
 
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     let successMessage = '';
-  
-  //     if (isEditing) {
-  //         const updatedProjects = projects.map((item, index) => 
-  //             index === editIndex ? newProject : item
-  //         );
-  //         setProjects(updatedProjects);
-  //         setIsEditing(false);
-  //         successMessage = `Successfully updated the project '${newProject.projectName}'.`;
-  //     } else {
-  //         setProjects([...projects, newProject]);
-  //         successMessage = `Successfully added the project '${newProject.projectName}'.`;
-  //     }
-  
-  //     createNotification(successMessage);
-  //     setShowSuccessAlert(true);
-  //     setTimeout(() => setShowSuccessAlert(false), 3000);
-  
-  //     setNewProject({
-  //       cid: '',
-  //       name: '',
-  //       number: '',
-  //       email: '',
-  //       project: '',
-  //       category: '',
-  //       total: '',
-  //       paid: '',
-  //       balance: '',
-  //       action: ''
-  //     });
-  //     setShowForm(false);
-  //     setEditIndex(-1); // Reset the edit index
-  // };
   
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
@@ -247,44 +215,29 @@ const CustomersTable = () => {
     let updatedProjects = [...projects];
     updatedProjects[editIndex] = newProject;
     setProjects(updatedProjects);
-    setShowForm(false);
-    setNewProject({
-        cid: '',
-        name: '',
-        number: '',
-        email: '',
-        project: '',
-        category: '',
-        total: '',
-        paid: '',
-        balance: '',
-        action: ''
-    });
-    setIsEditing(false);
 
-  };
+    setSuccessMessage(`Successfully updated customer '${newProject.name}'`);
+    setShowSuccessAlert(true);
+    setAlertColor('orange');
+    setTimeout(() => setShowSuccessAlert(false), 3000);
+
+    createNotification(`UPDATED CUSTOMER: ${newProject.name}`);
+
+    setShowForm(false);
+    resetFormState();
+};
+
 
   const handleRemoveClick = (index) => {
     setDeleteIndex(index);
     setShowDeleteConfirmation(true);
 };
-  const handleCancel = () => {
-    setShowForm(false);
-    setIsEditing(false);
-    setEditIndex(-1);
-    setNewProject({
-      cid: '',
-        name: '',
-        number: '',
-        email: '',
-        project: '',
-        total: '',
-        paid: '',
-        balance: '',
-        action: ''
-    });
-  };
-  const confirmDelete = async (id) => {
+const handleCancel = () => {
+  setShowForm(false);
+  resetFormState();
+};
+
+  const confirmDelete = () => {
     setShowDeleteConfirmation(false);
     // setShowPasswordPrompt(true);
     setCurrentAction('delete');
@@ -315,19 +268,28 @@ const cancelDelete = () => {
     setShowDeleteConfirmation(false);
     setDeleteIndex(null);
 };
+
 const deleteProject = () => {
   if (deleteIndex != null) {
       const projectToDelete = projects[deleteIndex];
       const updatedProjects = projects.filter((_, index) => index !== deleteIndex);
       setProjects(updatedProjects);
-      createNotification(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+
+      const deleteMessage = `Successfully deleted the customer '${projectToDelete.name}'.`;
+
+      setSuccessMessage(deleteMessage);
       setShowSuccessAlert(true);
-      setSuccessMessage(`Successfully deleted the project '${projectToDelete.projectName}'.`);
+      setAlertColor('red');  // Red color for deletion alerts
       setTimeout(() => setShowSuccessAlert(false), 3000);
-      setDeleteIndex(null); // Reset delete index after deletion
+
+      createNotification(deleteMessage);
+
+      resetFormState();
+      setShowDeleteConfirmation(false);
+      setShowPasswordPrompt(false);
   }
-  setShowPasswordPrompt(false);
 };
+
 
 
 
@@ -353,6 +315,7 @@ const getFilteredProjects = () => {
 
   return filtered;
 };
+
 const handlePasswordSubmit = (e) => {
   e.preventDefault();
   if (password === '12345') { // assuming '12345' is your test password
@@ -374,20 +337,28 @@ const handlePasswordSubmit = (e) => {
   setCurrentAction(''); // Reset the action after handling
 };
 
-const toggleNotifications = () => {
-  setShowNotifications(!showNotifications);
+const filteredProjects = getFilteredProjects();
+
+const clearNotifications = () => {
+  if (notifications.length > 0) {
+      setNotifications([]);  // Clear the list of notifications
+      if (showNotifications) {
+          toggleNotifications();  // Hide the notification panel
+      }
+  }
 };
 
 
-const filteredProjects = getFilteredProjects();
-
+const toggleNotifications = () => {
+  setShowNotifications(prevState => !prevState);
+};
 
 
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       {/* ... sidebar content ... */}
-      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:bg-gray-800 dark:border-gray-600">
+      <div className="flex flex-col w-64 h-full px-4 py-8 bg-black dark:border-gray-600">
         {/* Logo and title */}
           <div className="flex items-center space-x-2" >
             <img src={logo} alt="Logo" className="h-14 w-14" /> {/* Adjust the height and width as needed */}
@@ -399,7 +370,7 @@ const filteredProjects = getFilteredProjects();
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/projecttable" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -420,8 +391,11 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-          <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-              <span>LOGOUT</span>
+          <Link
+            to="/"  // Change "/logout" to your desired path
+            className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white"
+          >
+            <span>LOGOUT</span>
           </Link>
           </div>
         </div>
@@ -431,10 +405,10 @@ const filteredProjects = getFilteredProjects();
       <div className="flex flex-col flex-1">
         {/* Header */}
         {/* ... header content ... */}
-        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b dark:bg-gray-800 dark:border-gray-600 relative">
+        <div className="flex items-center justify-between flex-shrink-0 px-8 py-4 bg-white border-b  relative">
         <div className="flex items-center"> {/* Added a div to hold both the icon and the text */}
           <IoPersonSharp className="mr-2 w-6 h-6 text-customBlue" /> {/* Icon */}
-          <h1 className="text-xl font-bold text-customBlue dark:text-white">CUSTOMERS</h1> {/* Text */}
+          <h1 className="text-xl font-bold text-customBlue">CUSTOMERS</h1> {/* Text */}
           <button className="ml-4 relative" onClick={toggleNotifications}>
   <MdNotificationsActive className="w-6 h-6 text-customOrange" />
   {notifications.length > 0 && (
@@ -444,39 +418,48 @@ const filteredProjects = getFilteredProjects();
   )}
 </button>
 {showNotifications && (
-  <div style={{
-    position: 'absolute',
-    top: '100%', // positions the top edge of the panel at the bottom edge of the toggle button
-    right: 800,
-    width: '300px', // adjust as necessary
-    backgroundColor: 'white',
-    boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
-    zIndex: 1000, // make sure it's on top of other elements
-  }}>
-      <div className="text-lg font-bold border-b p-4">Notifications</div>
-      <ul className="max-h-60 overflow-auto">
-      {notifications.map(notification => (
-        <li key={notification.id} className="border-b last:border-b-0">
-            <a href="#" className="flex items-start p-4 hover:bg-gray-50">
-              <span className="flex-shrink-0 w-2 h-2 mt-1.5 bg-blue-500 rounded-full mr-3"></span>
-              <div className="flex-1 overflow-hidden">
-                <div className="text-sm font-medium text-gray-900">{notification.message}</div>
-                <p className="text-xs text-gray-500">{notification.time}</p>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <div className="text-sm font-medium text-blue-600 hover:text-blue-500 cursor-pointer p-4 text-center">Mark all as read</div>
-    </div>
-  )}
+            <div style={{
+                position: 'absolute',
+                top: '100%', // positions the top edge of the panel at the bottom edge of the toggle button
+                right: '800px',
+                width: '300px', // adjust as necessary
+                backgroundColor: 'white',
+                boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+                zIndex: 1000, // make sure it's on top of other elements
+            }}>
+                <div className="text-lg font-bold border-b p-4">Notifications</div>
+                <ul className="max-h-60 overflow-auto">
+                    {notifications.map(notification => (
+                        <li key={notification.id} className="border-b last:border-b-0">
+                            <a href="#" className="flex items-start p-4 hover:bg-gray-50">
+                                <span className="flex-shrink-0 w-2 h-2 mt-1.5 bg-blue-500 rounded-full mr-3"></span>
+                                <div className="flex-1 overflow-hidden">
+                                    <div className="text-sm font-medium text-gray-900">{notification.message}</div>
+                                    <p className="text-xs text-gray-500">{notification.time}</p>
+                                </div>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <div onClick={clearNotifications} className="text-sm font-medium text-blue-600 hover:text-blue-500 cursor-pointer p-4 text-center">
+                    Mark all as read
+                </div>
+
+            </div>
+        )}
 </div>
-          <div className="flex items-center space-x-2">
-            {/* Search box */}
-            <input className="border rounded px-3 py-1 " type="search" placeholder="Search" />
-            <div className="rounded-full h-8 w-8 bg-blue-500 text-white flex items-center justify-center" style={{ backgroundColor: '#0F076D' }}>JD</div>
-            <span>Juan Dela Cruz</span>
-          </div>
+        <div className="flex items-center space-x-2">
+          {profilePic && (
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="rounded-full h-8 w-8 object-cover"  // Ensures the image is circular and fits within the dimensions
+            />
+          )}
+
+          {/* Display the user's name next to the image */}
+          <span>{name}</span>
+        </div>
         </div>
 
         {/* Main Content */}
@@ -486,7 +469,7 @@ const filteredProjects = getFilteredProjects();
     <input
         className="border rounded-l py-2 px-3"
         type="search"
-        placeholder="Search projects"
+        placeholder="Search Customer"
         value={searchTerm}
         onChange={handleSearchChange}
     />
@@ -508,8 +491,8 @@ const filteredProjects = getFilteredProjects();
         + CUSTOMER
     </button>
     {showSuccessAlert && (
-    <div style={alertStyle} className="flex items-center">
-        <span className="text-green-800">{successMessage}</span>
+    <div style={{ ...alertStyle, backgroundColor: alertColor === 'red' ? '#F56565' : (alertColor === 'orange' ? '#ED8936' : '#C6F6D5'), borderColor: alertColor === 'red' ? '#C53030' : (alertColor === 'orange' ? '#DD6B20' : '#9AE6B4') }} className="ml-4">
+        <span className="text-white">{successMessage}</span>
     </div>
 )}
 
@@ -527,17 +510,17 @@ const filteredProjects = getFilteredProjects();
             </div>
         )}
 {showPasswordPrompt && (
-  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-20">
-    <div className="bg-black p-6 rounded shadow-xl">
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+    <div className="bg-white p-6 rounded shadow-xl">
       {/* Logo and title section */}
       <div className="flex flex-col items-center ">
     <img src={logo} alt="Logo" className="h-14 w-14" />
     <h1 className="text-xl font-bold text-customOrange mt-2 mb-4">Inventory System</h1>
-    <p className="text-xs text-white">To proceed and access the system, please enter your password</p>
+    <p className="text-xs text-black">To proceed and access the system, please enter your password</p>
 
-    <p className="text-xs text-white"> below.  This secure login ensures that only authorized personnel </p>
-    <p className="text-xs text-white">can view and manage the inventory data.</p>
-</div>
+    <p className="text-xs text-black"> below.  This secure login ensures that only authorized personnel </p>
+    <p className="text-xs text-black">can view and manage the inventory data.</p>
+  </div>
 
       
       <form onSubmit={handlePasswordSubmit} className="space-y-4 ">
@@ -571,39 +554,48 @@ const filteredProjects = getFilteredProjects();
 
           {showForm && (
 
-<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
-<div className="bg-white p-6 rounded shadow-xl">
+<div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10 px-6 md:px-12 lg:px-24"> {/* Increased padding responsively */}
+  <div className="bg-white p-6 rounded shadow-xl mb-4">  {/* Increased margin for responsiveness */}
 
-    <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-wrap -mx-2">
+      <div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-xl">
+        <img src={logo} alt="Logo" className="h-14 w-14" />
+    </div>
+    <div className="flex bg-white rounded p-2 items-center justify-center font-bold text-customOrange text-lg">
+        ADD CUSTOMERS
+    </div>
+
+
+
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl mx-auto">
+      <div className="flex flex-wrap -mx-2">
             {/* Wrap each input with a div and apply a consistent width */}
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2 ">
                 <label htmlFor="cid" className="block text-gray-700 text-sm font-bold mb-2">CUSTOMER ID</label>
-                <input type="text"id="cid" name="cid" value={formData.cid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text"id="cid" name="cid" value={newProject.cid} placeholder="CID" onChange={handleChange} className="shadow  text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">FULL NAME</label>
-                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="name" name="name" value={newProject.name} placeholder="Full Name" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
-                <input type="text" id="number" name="num" value={formData.num} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="number" name="number" value={newProject.number} placeholder="Contact Number" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL ADDRESS</label>
-                <input type="text" id="email" name="email" value={formData.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="email" name="email" value={newProject.email} placeholder="Email Address"  onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="project" className="block text-gray-700 text-sm font-bold mb-2">PROJECT</label>
-                <input type="text" id="project" name="project" value={formData.project} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="project" name="project" value={newProject.project} placeholder="Project" onChange={handleChange} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">CATEGORY</label>
-                <select id="category" name="category" value={formData.category} onChange={handleChange} className="block appearance-customBlue w-full bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
+                <select id="category" name="category" value={newProject.category} onChange={handleChange} className="block appearance-customBlue w-full text-sm bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value=""></option>
                     <option value="0">Condominium</option>
                     <option value="1">House</option>
@@ -611,31 +603,31 @@ const filteredProjects = getFilteredProjects();
                 </select>
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="total" className="block text-gray-700 text-sm font-bold mb-2">TOTAL</label>
-                <input type="text" id="total" name="total" value={formData.total} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="total" name="total" value={newProject.total} placeholder="Total" onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="paid" className="block text-gray-700 text-sm font-bold mb-2">PAID</label>
-                <input type="text" id="paid" name="paid" value={formData.paid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="paid" name="paid" value={newProject.paid} placeholder="Paid" onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
-            <div className="px-2 w-full md:w-1/2">
+            <div className="px-2 w-full md:w-1/3 mb-2">
                 <label htmlFor="balance" className="block text-gray-700 text-sm font-bold mb-2">BALANCE</label>
-                <input type="text" id="balance" name="balance" value={formData.balance} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="balance" name="balance" value={newProject.balance} placeholder="Balance"  onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
         </div>
 
         {/* Save and Cancel buttons */}
-        <div className="flex items-center space-x-4">
-            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-md">
-                Save
-            </button>
-            <button type="button" onClick={handleCancel} className="bg-red-500 text-white px-4 py-2 rounded-md">
-                Cancel
-            </button>
+        <div className="flex items-center justify-center space-x-4">
+        <button type="submit" className="bg-green-500 text-white w-32 px-3 font-semibold py-2 rounded-md">
+            Save
+        </button>
+        <button type="button" onClick={handleCancel} className="bg-red-500 text-white font-semibold w-32 px-4 py-2 rounded-md">
+            Cancel
+        </button>
         </div>
     </form>
 </div>
@@ -645,7 +637,7 @@ const filteredProjects = getFilteredProjects();
           {/* Table to display the projects */}
           {/* ... table ... */}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500">
+          <table className="w-full text-xs text-left text-gray-500">
           <thead className="text-xs text-white uppercase bg-customBlue">
                     <tr>
                     <th scope="col" className="px-6 py-3">CID</th>
@@ -675,16 +667,17 @@ const filteredProjects = getFilteredProjects();
                             <td className="px-6 py-4">{project.balance}</td>
                             <td style={{ padding: '12px' }}>
                             <button
-                            style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleEditClick(project, project.id)}
+                              style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
+                              onClick={() => handleEditClick(project, index)}
+                              title="Edit" 
                             >
-                            Edit
+                              <BsPencilSquare /> 
                             </button>
                             <button
                             style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
                             onClick={() => handleRemoveClick(project.id)}
                             >
-                            Remove
+                              <FaRegTrashCan />
                             </button>
                             </td>
                         </tr>
