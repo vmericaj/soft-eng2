@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from "../assets/se.png";
 import { TfiDashboard} from "react-icons/tfi";
 import { MdInventory2 } from "react-icons/md";
@@ -13,6 +13,8 @@ import { MdOutlineMail } from "react-icons/md";
 import { MdOutlinePhoneInTalk } from "react-icons/md";
 import { VscTypeHierarchySuper } from 'react-icons/vsc'; // Import icon for department
 import { FaRegIdBadge } from 'react-icons/fa';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 // ... other imports ...
 
 // Define InfoCard component inside your Employees component
@@ -21,11 +23,11 @@ const InfoCard = ({ project, onEdit, onRemove }) => {
     <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex items-center" style={{ maxWidth: '560px' }}>
       {/* Image container */}
       {project.image && (
-        <img src={URL.createObjectURL(project.image)} alt="Profile" className="w-24 h-35 rounded  object-cover mr-4" />
+        <img src={`http://localhost:5000/${project.image}`} alt="Profile" className="w-24 h-35 rounded  object-cover mr-4" />
       )}
       {/* Text container */}
       <div className="flex-grow">
-        <div className="text-lg font-bold">{project.name}</div>
+        <div className="text-lg font-bold">{project.fullname}</div>
         <div className="text-md">{project.position}</div>
         <ul className="my-1 space x-1 text-[0.75rem]">
           <li className="flex items-center"><VscTypeHierarchySuper className="mr-1" /> {project.department}</li>
@@ -37,7 +39,7 @@ const InfoCard = ({ project, onEdit, onRemove }) => {
         </div>
         <div className="flex items-center text-[0.75rem]">
           <MdOutlinePhoneInTalk className="mr-1" /> {/* Email icon */}
-          <span>{project.number}</span>
+          <span>{project.contact}</span>
         </div>
       </div>
       {/* Action buttons */}
@@ -83,6 +85,16 @@ const Employees = () => {
         attachment: '',
         action: ''
     });
+
+    useEffect(() => {
+      // Fetch data when the component mounts
+      fetch('http://localhost:5000/api/get/employees')
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data.result);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+    }, []); // 
     
     const [isEditing, setIsEditing] = useState(false);
     const [editIndex, setEditIndex] = useState(-1);
@@ -101,6 +113,11 @@ const Employees = () => {
       // Assuming you want to store the file itself, not just the file path
       if (e.target.files && e.target.files[0]) {
           setImage(e.target.files[0]);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            attachment: e.target.files[0], // Set attachment to the selected file
+          }));
+          console.log(formData);
       }
   };
     const [showNotifications, setShowNotifications] = useState(false);
@@ -117,29 +134,41 @@ const Employees = () => {
       setNotifications(prevNotifications => [newNotification, ...prevNotifications]);
     };
     // ... other functions ...
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      const newValue = value.replace(/,/g, ''); // Remove commas before parsing
+  //   const handleChange = (e) => {
+  //     const { name, value } = e.target;
+  //     const newValue = value.replace(/,/g, ''); // Remove commas before parsing
   
-      // If the field being changed is 'paid', calculate the balance
-      if (name === "paid") {
-          const paidAmount = parseFloat(newValue) || 0; // Parse the paid value, defaulting to 0 if not a number
-          const totalAmount = parseFloat(newProject.total.replace(/,/g, '')) || 0; // Parse the total value, defaulting to 0 if not a number
-          const balanceAmount = totalAmount - paidAmount; // Calculate the balance
+  //     // If the field being changed is 'paid', calculate the balance
+  //     if (name === "paid") {
+  //         const paidAmount = parseFloat(newValue) || 0; // Parse the paid value, defaulting to 0 if not a number
+  //         const totalAmount = parseFloat(newProject.total.replace(/,/g, '')) || 0; // Parse the total value, defaulting to 0 if not a number
+  //         const balanceAmount = totalAmount - paidAmount; // Calculate the balance
           
-          // Format the balance to show commas as thousands separators
-          const formattedBalance = balanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  //         // Format the balance to show commas as thousands separators
+  //         const formattedBalance = balanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   
-          // Update the state with the new paid amount and the formatted balance
-          setNewProject({ ...newProject, [name]: newValue, balance: formattedBalance });
-      } else {
-          // For all other fields, update the state as usual
-          setNewProject({ ...newProject, [name]: newValue });
-      }
-  };
+  //         // Update the state with the new paid amount and the formatted balance
+  //         setNewProject({ ...newProject, [name]: newValue, balance: formattedBalance });
+  //     } else {
+  //         // For all other fields, update the state as usual
+  //         setNewProject({ ...newProject, [name]: newValue });
+  //     }
+  // };
+
+  const [formData, setFormData] = useState({
+      edit: false,
+      eid: '',
+      name: '',
+      position: '',
+      department: '',
+      email: '',
+      number: ''
+  });
+
+  const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+  };  
   
-
-
     const addNotification = (newProject) => {
       const newNotification = {
         id: notifications.length + 1, // or a more sophisticated ID logic
@@ -149,56 +178,102 @@ const Employees = () => {
       setNotifications([...notifications, newNotification]);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async e => {
       e.preventDefault();
-      let successMessage = '';
-      const formData = new FormData();
-    formData.append('image', image); // Append the image file to the formData
-    // Append other form data
-    formData.append('eid', newProject.cid);
-    formData.append('name', newProject.name);
-    formData.append('number', newProject.number);
-    formData.append('email', newProject.email);
-  
-      if (isEditing) {
-          const updatedProjects = projects.map((item, index) => 
-              index === editIndex ? newProject : item
-          );
-          setProjects(updatedProjects);
-          setIsEditing(false);
-          successMessage = `Successfully updated the project '${newProject.projectName}'.`;
-      } else {
-          setProjects([...projects, newProject]);
-          successMessage = `Successfully added the project '${newProject.projectName}'.`;
-      }
-  
-      createNotification(successMessage);
-      setShowSuccessAlert(true);
-      setTimeout(() => setShowSuccessAlert(false), 3000);
-
-      const submittedProject = {
-            ...newProject,
-            image: image,
-            id: Date.now(), // using the timestamp as an ID
-        };
-
-        setProjects([...projects, submittedProject]);
-        setShowSuccessAlert(true);
-        setSuccessMessage(`Successfully added the project '${newProject.name}'.`);
-        setTimeout(() => setShowSuccessAlert(false), 3000);
+      try {
+        if (formData.edit == true){
+          await axios.post('http://localhost:5000/api/edit/employee', formData, {
+            headers: {'Content-Type': 'multipart/form-data', },
+          }); // Replace '/api/add/project' with your backend API endpoint
+        }else{
+          await axios.post('http://localhost:5000/api/add/employee', formData, {
+            headers: {'Content-Type': 'multipart/form-data', },
+          }); // Replace '/api/add/project' with your backend API endpoint
+        }
         setShowForm(false);
-        setNewProject({
-            eid: '',
-            name: '',
-            position: '',
-            department: '',
-            email: '',
-            number: '',
-            attachment: '',
-            action: ''
+        if (formData.edit == true){
+          setCurrentAction('');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Employee edited successfully',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.reload(); // Reload the page
+            }
+          });
+      }else{
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Employee added successfully',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.reload(); // Reload the page
+          }
         });
-        setImage(null);
+      }
+       
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong. Please try again later.'
+        });
+      }
     };
+
+    // const handleSubmit = (e) => {
+    //   e.preventDefault();
+    //   let successMessage = '';
+    //   const formData = new FormData();
+    // formData.append('image', image); // Append the image file to the formData
+    // // Append other form data
+    // formData.append('eid', newProject.cid);
+    // formData.append('name', newProject.name);
+    // formData.append('number', newProject.number);
+    // formData.append('email', newProject.email);
+  
+    //   if (isEditing) {
+    //       const updatedProjects = projects.map((item, index) => 
+    //           index === editIndex ? newProject : item
+    //       );
+    //       setProjects(updatedProjects);
+    //       setIsEditing(false);
+    //       successMessage = `Successfully updated the project '${newProject.projectName}'.`;
+    //   } else {
+    //       setProjects([...projects, newProject]);
+    //       successMessage = `Successfully added the project '${newProject.projectName}'.`;
+    //   }
+  
+    //   createNotification(successMessage);
+    //   setShowSuccessAlert(true);
+    //   setTimeout(() => setShowSuccessAlert(false), 3000);
+
+    //   const submittedProject = {
+    //         ...newProject,
+    //         image: image,
+    //         id: Date.now(), // using the timestamp as an ID
+    //     };
+
+    //     setProjects([...projects, submittedProject]);
+    //     setShowSuccessAlert(true);
+    //     setSuccessMessage(`Successfully added the project '${newProject.name}'.`);
+    //     setTimeout(() => setShowSuccessAlert(false), 3000);
+    //     setShowForm(false);
+    //     setNewProject({
+    //         eid: '',
+    //         name: '',
+    //         position: '',
+    //         department: '',
+    //         email: '',
+    //         number: '',
+    //         attachment: '',
+    //         action: ''
+    //     });
+    //     setImage(null);
+    // };
 
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
@@ -213,6 +288,16 @@ const Employees = () => {
       setEditIndex(index);
       setShowPasswordPrompt(true);
       setCurrentAction('edit');
+      setFormData({
+        edit: true,
+        id: project.id,
+        eid: project.eid,
+        name: project.fullname,
+        position: project.position,
+        department: project.department,
+        email: project.email,
+        number: project.contact
+      })
   };
     
 
@@ -255,10 +340,30 @@ const Employees = () => {
         action: ''
     });
   };
-  const confirmDelete = () => {
+  const confirmDelete = async (id) => {
     setShowDeleteConfirmation(false);
-    setShowPasswordPrompt(true);
+    // setShowPasswordPrompt(true);
     setCurrentAction('delete');
+    try {
+      await axios.post('http://localhost:5000/api/delete/employee', {id: deleteIndex}); // Replace '/api/add/project' with your backend API endpoint
+      setShowForm(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Employee deleted successfully',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload(); // Reload the page
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong. Please try again later.'
+      });
+    }
 };
 
 const cancelDelete = () => {
@@ -331,8 +436,6 @@ const toggleNotifications = () => {
 
 const filteredProjects = getFilteredProjects();
 
-
-
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -345,11 +448,11 @@ const filteredProjects = getFilteredProjects();
           </div>
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -370,9 +473,9 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+          <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
               <span>LOGOUT</span>
-            </button>
+          </Link>
           </div>
         </div>
       </div>
@@ -524,42 +627,42 @@ const filteredProjects = getFilteredProjects();
 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
 <div className="bg-white p-6 rounded shadow-xl">
 
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" enctype="multipart/form-data">
         <div className="flex flex-wrap -mx-2">
             {/* Wrap each input with a div and apply a consistent width */}
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="eid" className="block text-gray-700 text-sm font-bold mb-2">EMPLOYEE ID</label>
-                <input type="text"id="eid" name="eid" value={newProject.eid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text"id="eid" name="eid" value={formData.eid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">FULL NAME</label>
-                <input type="text" id="name" name="name" value={newProject.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="position" className="block text-gray-700 text-sm font-bold mb-2">POSITION</label>
-                <input type="text" id="position" name="position" value={newProject.position} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="position" name="position" value={formData.position} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">DEPARTMENT</label>
-                <input type="text" id="department" name="department" value={newProject.department} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL</label>
-                <input type="text" id="email" name="email" value={newProject.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="email" name="email" value={formData.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
            
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
-                <input type="text" id="number" name="number" value={newProject.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="number" name="number" value={formData.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full">
             <label htmlFor="imageUpload" className="block text-gray-700 text-sm font-bold mb-2">Attach Picture</label>
-            <input type="file" id="imageUpload" name="imageUpload" accept="image/*" 
+            <input type="file" id="imageUpload" name="attachment" accept="image/*" 
                   className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                 onChange={handleImageChange} />
 </div>
@@ -584,12 +687,12 @@ const filteredProjects = getFilteredProjects();
 </div>
 )}
 <div className="flex flex-wrap -m-2">
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <div key={project.id} className="p-2" style={{ flexBasis: 'calc(50% - 1rem)' }}>
               <InfoCard
                 project={project}
-                onEdit={() => handleEditClick(project, index)}
-                onRemove={() => handleRemoveClick(index)}
+                onEdit={() => handleEditClick(project, project.id)}
+                onRemove={() => handleRemoveClick(project.id)}
               />
             </div>
           ))}

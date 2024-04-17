@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from "../assets/se.png";
 import { TfiDashboard} from "react-icons/tfi";
 import { MdInventory2 } from "react-icons/md";
@@ -9,6 +9,8 @@ import { VscAccount } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import { MdNotificationsActive } from "react-icons/md";
 import moment from 'moment';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 // ... other imports ...
@@ -47,6 +49,16 @@ const CustomersTable = () => {
         balance: '',
         action: ''
     });
+
+    useEffect(() => {
+      // Fetch data when the component mounts
+      fetch('http://localhost:5000/api/get/customers')
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data.result);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+    }, []); // 
     
     const [isEditing, setIsEditing] = useState(false);
     const [editIndex, setEditIndex] = useState(-1);
@@ -75,27 +87,43 @@ const CustomersTable = () => {
       setNotifications(prevNotifications => [newNotification, ...prevNotifications]);
     };
     // ... other functions ...
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      const newValue = value.replace(/,/g, ''); // Remove commas before parsing
+  //   const handleChange = (e) => {
+  //     const { name, value } = e.target;
+  //     const newValue = value.replace(/,/g, ''); // Remove commas before parsing
   
-      // If the field being changed is 'paid', calculate the balance
-      if (name === "paid") {
-          const paidAmount = parseFloat(newValue) || 0; // Parse the paid value, defaulting to 0 if not a number
-          const totalAmount = parseFloat(newProject.total.replace(/,/g, '')) || 0; // Parse the total value, defaulting to 0 if not a number
-          const balanceAmount = totalAmount - paidAmount; // Calculate the balance
+  //     // If the field being changed is 'paid', calculate the balance
+  //     if (name === "paid") {
+  //         const paidAmount = parseFloat(newValue) || 0; // Parse the paid value, defaulting to 0 if not a number
+  //         const totalAmount = parseFloat(newProject.total.replace(/,/g, '')) || 0; // Parse the total value, defaulting to 0 if not a number
+  //         const balanceAmount = totalAmount - paidAmount; // Calculate the balance
           
-          // Format the balance to show commas as thousands separators
-          const formattedBalance = balanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  //         // Format the balance to show commas as thousands separators
+  //         const formattedBalance = balanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   
-          // Update the state with the new paid amount and the formatted balance
-          setNewProject({ ...newProject, [name]: newValue, balance: formattedBalance });
-      } else {
-          // For all other fields, update the state as usual
-          setNewProject({ ...newProject, [name]: newValue });
-      }
-  };
-  
+  //         // Update the state with the new paid amount and the formatted balance
+  //         setNewProject({ ...newProject, [name]: newValue, balance: formattedBalance });
+  //     } else {
+  //         // For all other fields, update the state as usual
+  //         setNewProject({ ...newProject, [name]: newValue });
+  //     }
+  // };
+
+  const [formData, setFormData] = useState({
+      edit: false,
+      cid: '',
+      name: '',
+      num: '',
+      email: '',
+      project: '',
+      category: '',
+      total: '',
+      paid: '',
+      balance: ''
+  });
+
+  const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+  };  
 
 
     const addNotification = (newProject) => {
@@ -106,41 +134,84 @@ const CustomersTable = () => {
       };
       setNotifications([...notifications, newNotification]);
     };
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async e => {
       e.preventDefault();
-      let successMessage = '';
-  
-      if (isEditing) {
-          const updatedProjects = projects.map((item, index) => 
-              index === editIndex ? newProject : item
-          );
-          setProjects(updatedProjects);
-          setIsEditing(false);
-          successMessage = `Successfully updated the project '${newProject.projectName}'.`;
-      } else {
-          setProjects([...projects, newProject]);
-          successMessage = `Successfully added the project '${newProject.projectName}'.`;
+      try {
+        if (formData.edit == true){
+          await axios.post('http://localhost:5000/api/edit/customer', formData); // Replace '/api/add/project' with your backend API endpoint
+        }else{
+          await axios.post('http://localhost:5000/api/add/customer', formData); // Replace '/api/add/project' with your backend API endpoint
+        }
+        setShowForm(false);
+        if (formData.edit == true){
+          setCurrentAction('');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Customer edited successfully',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.reload(); // Reload the page
+            }
+          });
+      }else{
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Customer added successfully',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.reload(); // Reload the page
+          }
+        });
       }
+       
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong. Please try again later.'
+        });
+      }
+    };
+
+  //   const handleSubmit = (e) => {
+  //     e.preventDefault();
+  //     let successMessage = '';
   
-      createNotification(successMessage);
-      setShowSuccessAlert(true);
-      setTimeout(() => setShowSuccessAlert(false), 3000);
+  //     if (isEditing) {
+  //         const updatedProjects = projects.map((item, index) => 
+  //             index === editIndex ? newProject : item
+  //         );
+  //         setProjects(updatedProjects);
+  //         setIsEditing(false);
+  //         successMessage = `Successfully updated the project '${newProject.projectName}'.`;
+  //     } else {
+  //         setProjects([...projects, newProject]);
+  //         successMessage = `Successfully added the project '${newProject.projectName}'.`;
+  //     }
   
-      setNewProject({
-        cid: '',
-        name: '',
-        number: '',
-        email: '',
-        project: '',
-        category: '',
-        total: '',
-        paid: '',
-        balance: '',
-        action: ''
-      });
-      setShowForm(false);
-      setEditIndex(-1); // Reset the edit index
-  };
+  //     createNotification(successMessage);
+  //     setShowSuccessAlert(true);
+  //     setTimeout(() => setShowSuccessAlert(false), 3000);
+  
+  //     setNewProject({
+  //       cid: '',
+  //       name: '',
+  //       number: '',
+  //       email: '',
+  //       project: '',
+  //       category: '',
+  //       total: '',
+  //       paid: '',
+  //       balance: '',
+  //       action: ''
+  //     });
+  //     setShowForm(false);
+  //     setEditIndex(-1); // Reset the edit index
+  // };
   
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
@@ -155,6 +226,19 @@ const CustomersTable = () => {
       setEditIndex(index);
       setShowPasswordPrompt(true);
       setCurrentAction('edit');
+      setFormData({
+        edit: true,
+        id: project.id,
+        cid: project.cid,
+        name: project.name,
+        num: project.num,
+        email: project.email,
+        project: project.project,
+        category: project.category,
+        total: project.total,
+        paid: project.paid,
+        balance: project.balance
+      });
   };
     
 
@@ -200,10 +284,31 @@ const CustomersTable = () => {
         action: ''
     });
   };
-  const confirmDelete = () => {
+  const confirmDelete = async (id) => {
     setShowDeleteConfirmation(false);
-    setShowPasswordPrompt(true);
+    // setShowPasswordPrompt(true);
     setCurrentAction('delete');
+    try {
+      await axios.post('http://localhost:5000/api/delete/customer', {id: deleteIndex}); // Replace '/api/add/project' with your backend API endpoint
+      setShowForm(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Customer deleted successfully',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload(); // Reload the page
+        }
+      });
+
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong. Please try again later.'
+      });
+    }
 };
 
 const cancelDelete = () => {
@@ -290,11 +395,11 @@ const filteredProjects = getFilteredProjects();
           </div>
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -315,9 +420,9 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+          <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
               <span>LOGOUT</span>
-            </button>
+          </Link>
           </div>
         </div>
       </div>
@@ -474,51 +579,51 @@ const filteredProjects = getFilteredProjects();
             {/* Wrap each input with a div and apply a consistent width */}
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="cid" className="block text-gray-700 text-sm font-bold mb-2">CUSTOMER ID</label>
-                <input type="text"id="cid" name="cid" value={newProject.cid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text"id="cid" name="cid" value={formData.cid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">FULL NAME</label>
-                <input type="text" id="name" name="name" value={newProject.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="number" className="block text-gray-700 text-sm font-bold mb-2">CONTACT NUMBER</label>
-                <input type="text" id="number" name="number" value={newProject.number} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="number" name="num" value={formData.num} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">EMAIL ADDRESS</label>
-                <input type="text" id="email" name="email" value={newProject.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="email" name="email" value={formData.email} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="project" className="block text-gray-700 text-sm font-bold mb-2">PROJECT</label>
-                <input type="text" id="project" name="project" value={newProject.project} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="project" name="project" value={formData.project} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">CATEGORY</label>
-                <select id="category" name="category" value={newProject.category} onChange={handleChange} className="block appearance-customBlue w-full bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
+                <select id="category" name="category" value={formData.category} onChange={handleChange} className="block appearance-customBlue w-full bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value=""></option>
-                    <option value="Condominium">Condominium</option>
-                    <option value="House">House</option>
-                    <option value="Pool">Pool</option>
+                    <option value="0">Condominium</option>
+                    <option value="1">House</option>
+                    <option value="2">Pool</option>
                 </select>
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="total" className="block text-gray-700 text-sm font-bold mb-2">TOTAL</label>
-                <input type="text" id="total" name="total" value={newProject.total} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="total" name="total" value={formData.total} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="paid" className="block text-gray-700 text-sm font-bold mb-2">PAID</label>
-                <input type="text" id="paid" name="paid" value={newProject.paid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="paid" name="paid" value={formData.paid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="balance" className="block text-gray-700 text-sm font-bold mb-2">BALANCE</label>
-                <input type="text" id="balance" name="balance" value={newProject.balance} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="balance" name="balance" value={formData.balance} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
         </div>
@@ -557,27 +662,27 @@ const filteredProjects = getFilteredProjects();
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredProjects.map((project, index) => (
-                                    <tr key={index} className={Object.values(project).some(attribute => String(attribute).toLowerCase().includes(searchTerm.toLowerCase())) ? 'bg-white text-black' : 'bg-white'}>
+                    {projects.map((project) => (
+                                    <tr key={project.id} className={Object.values(project).some(attribute => String(attribute).toLowerCase().includes(searchTerm.toLowerCase())) ? 'bg-white text-black' : 'bg-white'}>
                                         <td className="px-6 py-4">{project.cid}</td>
                             <td className="px-6 py-4">{project.name}</td>
-                            <td className="px-6 py-4">{project.number}</td>
+                            <td className="px-6 py-4">{project.num}</td>
                             <td className="px-6 py-4">{project.email}</td>
                             <td className="px-6 py-4">{project.project}</td>
-                            <td className="px-6 py-4">{project.category}</td>
+                            <td className="px-6 py-4">{project.category == 0 ? 'Condominum' : project.category == 1 ? 'House' : 'Pool'}</td>
                             <td className="px-6 py-4">{project.total}</td>
                             <td className="px-6 py-4">{project.paid}</td>
                             <td className="px-6 py-4">{project.balance}</td>
                             <td style={{ padding: '12px' }}>
                             <button
                             style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleEditClick(project, index)}
+                            onClick={() => handleEditClick(project, project.id)}
                             >
                             Edit
                             </button>
                             <button
                             style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleRemoveClick(index)}
+                            onClick={() => handleRemoveClick(project.id)}
                             >
                             Remove
                             </button>

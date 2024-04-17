@@ -33,11 +33,11 @@ const Inventory = () => {
 
           <nav>
 
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>

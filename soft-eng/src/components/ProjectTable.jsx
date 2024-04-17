@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from "../assets/se.png";
 import { TfiDashboard} from "react-icons/tfi";
 import { MdInventory2 } from "react-icons/md";
@@ -9,6 +9,8 @@ import { VscAccount } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import { MdNotificationsActive } from "react-icons/md";
 import moment from 'moment';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 // ... other imports ...
@@ -31,8 +33,6 @@ const ProjectTable = () => {
     height: '100%', // Match the height of the buttons
   };
   
-  
-  
     const [projects, setProjects] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [newProject, setNewProject] = useState({
@@ -44,7 +44,31 @@ const ProjectTable = () => {
       endDate: '',
       status: ''
     });
+
+    // let getProjects = async e => {
+    //   data = await axios.get('http://localhost:5000/api/get/projects');
     
+    // //  projects.map((project, index) => {
+    // //     console.log(project.pid);
+    // //  }); 
+    // console.log(data);
+ 
+    // }
+
+   
+
+    // getProjects();
+
+    useEffect(() => {
+      // Fetch data when the component mounts
+      fetch('http://localhost:5000/api/get/projects')
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data.result);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+    }, []); // 
+
     const [isEditing, setIsEditing] = useState(false);
     const [editIndex, setEditIndex] = useState(-1);
     const [searchTerm, setSearchTerm] = useState('');
@@ -71,19 +95,24 @@ const ProjectTable = () => {
       };
       setNotifications(prevNotifications => [newNotification, ...prevNotifications]);
     };
-    
-
-
-    
-
-
-
 
 
     // ... other functions ...
+
+    const [formData, setFormData] = useState({
+        edit: false,
+        pid: '',
+        name: '',
+        category: '',
+        location: '',
+        startDate: '',
+        endDate: ''
+    });
+
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewProject({ ...newProject, [name]: value });
+        // const { name, value } = e.target;
+        // setNewProject({ ...newProject, [name]: value });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const addNotification = (newProject) => {
@@ -94,40 +123,82 @@ const ProjectTable = () => {
       };
       setNotifications([...notifications, newNotification]);
     };
+
+    const handleSubmit = async e => {
+      e.preventDefault();
+      try {
+        if (formData.edit == true){
+          await axios.post('http://localhost:5000/api/edit/project', formData); // Replace '/api/add/project' with your backend API endpoint
+        }else{
+          await axios.post('http://localhost:5000/api/add/project', formData); // Replace '/api/add/project' with your backend API endpoint
+        }
+        setShowForm(false);
+        if (formData.edit == true){
+          setCurrentAction('');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Project edited successfully',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.reload(); // Reload the page
+            }
+          });
+      }else{
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Project added successfully',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.reload(); // Reload the page
+          }
+        });
+      }
+       
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong. Please try again later.'
+        });
+      }
+    };
     
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      let successMessage = '';
+  //   const handleSubmit = (e) => {
+  //     e.preventDefault();
+  //     let successMessage = '';
   
-      if (isEditing) {
-          const updatedProjects = projects.map((item, index) => 
-              index === editIndex ? newProject : item
-          );
-          setProjects(updatedProjects);
-          setIsEditing(false);
-          successMessage = `Successfully updated the project '${newProject.projectName}'.`;
-      } else {
-          setProjects([...projects, newProject]);
-          successMessage = `Successfully added the project '${newProject.projectName}'.`;
-      }
+  //     if (isEditing) {
+  //         const updatedProjects = projects.map((item, index) => 
+  //             index === editIndex ? newProject : item
+  //         );
+  //         setProjects(updatedProjects);
+  //         setIsEditing(false);
+  //         successMessage = `Successfully updated the project '${newProject.projectName}'.`;
+  //     } else {
+  //         setProjects([...projects, newProject]);
+  //         successMessage = `Successfully added the project '${newProject.projectName}'.`;
+  //     }
   
-      createNotification(successMessage);
-      setShowSuccessAlert(true);
-      setTimeout(() => setShowSuccessAlert(false), 3000);
+  //     createNotification(successMessage);
+  //     setShowSuccessAlert(true);
+  //     setTimeout(() => setShowSuccessAlert(false), 3000);
   
-      setNewProject({
-          pid: '',
-          projectName: '',
-          category: '',
-          location: '',
-          startDate: '',
-          endDate: '',
-          status: ''
-      });
-      setShowForm(false);
-      setEditIndex(-1); // Reset the edit index
-  };
+  //     setNewProject({
+  //         pid: '',
+  //         projectName: '',
+  //         category: '',
+  //         location: '',
+  //         startDate: '',
+  //         endDate: '',
+  //         status: ''
+  //     });
+  //     setShowForm(false);
+  //     setEditIndex(-1); // Reset the edit index
+  // };
   
       const handleAddProjectClick = () => {
         setShowPasswordPrompt(true);
@@ -138,10 +209,20 @@ const ProjectTable = () => {
     
 
     const handleEditClick = (project, index) => {
+      setCurrentAction('edit');
       setNewProject(project);
       setEditIndex(index);
       setShowPasswordPrompt(true);
-      setCurrentAction('edit');
+      setFormData({
+        edit: true,
+        id: project.id,
+        pid: project.pid,
+        name: project.name,
+        category: project.category,
+        location: project.location,
+        startDate: project.start_date.substring(0, 10),
+        endDate: project.end_date.substring(0, 10),
+      });
   };
     
 
@@ -182,10 +263,31 @@ const ProjectTable = () => {
       status: ''
     });
   };
-  const confirmDelete = () => {
+  const confirmDelete = async (id) => {
     setShowDeleteConfirmation(false);
-    setShowPasswordPrompt(true);
+    // setShowPasswordPrompt(true);
     setCurrentAction('delete');
+    try {
+      await axios.post('http://localhost:5000/api/delete/project', {id: deleteIndex}); // Replace '/api/add/project' with your backend API endpoint
+      setShowForm(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Project deleted successfully',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload(); // Reload the page
+        }
+      });
+
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong. Please try again later.'
+      });
+    }
 };
 
 const cancelDelete = () => {
@@ -272,11 +374,11 @@ const filteredProjects = getFilteredProjects();
           </div>
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" /> {/* Placing the icon before the text */}
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -298,9 +400,9 @@ const filteredProjects = getFilteredProjects();
           </nav>
 
           <div className="flex items-center px-4 -mx-2">
-            <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-              <span>LOGOUT</span>
-            </button>
+            <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+                <span>LOGOUT</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -457,38 +559,38 @@ const filteredProjects = getFilteredProjects();
             {/* Wrap each input with a div and apply a consistent width */}
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="pid" className="block text-gray-700 text-sm font-bold mb-2">PROJECT ID</label>
-                <input type="text" id="pid" name="pid" value={newProject.pid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="pid" name="pid" value={formData.pid} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="projectName" className="block text-gray-700 text-sm font-bold mb-2">PROJECT NAME</label>
-                <input type="text" id="projectName" name="projectName" value={newProject.projectName} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="projectName" name="name" value={formData.name} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">CATEGORY</label>
-                <select id="category" name="category" value={newProject.category} onChange={handleChange} className="block appearance-customBlue w-full bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
+                <select id="category" name="category" value={formData.category} onChange={handleChange} className="block appearance-customBlue w-full bg-white border  hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value=""></option>
-                    <option value="Condominium">Condominium</option>
-                    <option value="House">House</option>
-                    <option value="Pool">Pool</option>
+                    <option value="0">Condominium</option>
+                    <option value="1">House</option>
+                    <option value="2">Pool</option>
                 </select>
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="location" className="block text-gray-700 text-sm font-bold mb-2">LOCATION</label>
-                <input type="text" id="location" name="location" value={newProject.location} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             {/* Start Date and End Date beside each other */}
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="startDate" className="block text-gray-700 text-sm font-bold mb-2">START DATE</label>
-                <input type="date" id="startDate" name="startDate" value={newProject.startDate} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
 
             <div className="px-2 w-full md:w-1/2">
                 <label htmlFor="endDate" className="block text-gray-700 text-sm font-bold mb-2">END DATE</label>
-                <input type="date" id="endDate" name="endDate" value={newProject.endDate} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
             </div>
         </div>
 
@@ -523,30 +625,31 @@ const filteredProjects = getFilteredProjects();
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredProjects.map((project, index) => (
-                                    <tr key={index} className={Object.values(project).some(attribute => String(attribute).toLowerCase().includes(searchTerm.toLowerCase())) ? 'bg-white text-black' : 'bg-white'}>
-                                        <td className="px-6 py-4">{project.pid}</td>
-                            <td className="px-6 py-4">{project.projectName}</td>
-                            <td className="px-6 py-4">{project.category}</td>
-                            <td className="px-6 py-4">{project.location}</td>
-                            <td className="px-6 py-4">{project.startDate}</td>
-                            <td className="px-6 py-4">{project.endDate}</td>
-                            <td style={{ padding: '12px' }}>
-                            <button
-                            style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleEditClick(project, index)}
-                            >
-                            Edit
-                            </button>
-                            <button
-                            style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
-                            onClick={() => handleRemoveClick(index)}
-                            >
-                            Remove
-                            </button>
-                            </td>
-                        </tr>
-                        ))}
+                    {projects.map((project) => (
+          <tr key={project.id} className={Object.values(project).some(attribute => String(attribute).toLowerCase().includes(searchTerm.toLowerCase())) ? 'bg-white text-black' : 'bg-white'}>
+            <td className="px-6 py-4">{project.pid}</td>
+            <td className="px-6 py-4">{project.name}</td>
+            <td className="px-6 py-4">{project.category == 0 ? 'Condominum' : project.category == 1 ? 'House' : 'Pool'}</td>
+            <td className="px-6 py-4">{project.location}</td>
+            <td className="px-6 py-4">{project.start_date.substring(0, 10)}</td>
+            <td className="px-6 py-4">{project.end_date.substring(0, 10)}</td>
+            <td style={{ padding: '12px' }}>
+              <button
+                style={{ marginRight: '5px', padding: '5px 10px', background: '#0F076D', color: 'white', borderRadius: '5px' }}
+                onClick={() => handleEditClick(project, project.id)}
+              >
+                Edit
+              </button> 
+              <button
+                style={{ padding: '5px 10px', background: '#C80007', color: 'white', borderRadius: '5px' }}
+                onClick={() => handleRemoveClick(project.id)}
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        ))}
+
                     </tbody>
                 </table>
           </div>

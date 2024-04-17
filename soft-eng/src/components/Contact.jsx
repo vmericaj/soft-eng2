@@ -13,12 +13,45 @@ import alarmIcon from "../assets/alarm.png";
 import phoneIcon from "../assets/phone.png";
 import emailIcon from "../assets/email.png";
 import locationIcon from "../assets/location.png";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const Contact = () => {
   const [hover1, setHover1] = useState(false);
   const [hover2, setHover2] = useState(false);
   const [hover3, setHover3] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:5000/api/send-email', formData); // Replace '/api/send-email' with your backend API endpoint
+      Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Message sent successfully!'
+    });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to send email. Please try again later.'
+      });
+    }
+  };
+
   return (
     <div>
       {/* Header Section */}
@@ -93,11 +126,11 @@ const Contact = () => {
       <div className="w-full md:w-1/2 p-10">
         <h2 className="text-xl font-bold mb-4">Got a question about 3MV Construction?</h2>
         <p className="mb-8">Are you interested in performing with us? Have some suggestions? Fill out the form and a member from our team will get back to you within 24 hours.</p>
-        <form className="space-y-4">
-          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" type="text" placeholder="Enter your name" />
-          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" type="email" placeholder="Enter your email address" />
-          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" type="tel" placeholder="Enter your phone number" />
-          <textarea className="w-full p-2 border-2 border-[#EF9400] rounded-lg" placeholder="Message" rows="4"></textarea>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" name="name" type="text" value={formData.name} onChange={handleChange} placeholder="Enter your name" />
+          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Enter your email address" />
+          <input className="w-full p-2 border-2 border-[#EF9400] rounded-lg" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Enter your phone number" />
+          <textarea className="w-full p-2 border-2 border-[#EF9400] rounded-lg" name="message" value={formData.message} onChange={handleChange} placeholder="Message" rows="4"></textarea>
           <button className="w-full p-2 bg-[#EF9400] text-white font-bold rounded-lg">SUBMIT</button>
         </form>
       </div>

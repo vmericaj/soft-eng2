@@ -1,10 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import backgroundImage from "../assets/BG.jpg"; // replace with your actual image path
 import logo from "../assets/se.png";
 import someImage from "../assets/Facebook.png";
 import someImage1 from "../assets/Google.png";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 const SignUp = () => {
+
+  const [formData, setFormData] = useState({
+    fname: '',
+    lname: '',
+    email: '',
+    password: '',
+    cpassword: ''
+  });
+
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      if (formData.password !== formData.cpassword) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Passwords do not match!'
+        });
+        return;
+      }
+
+      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      // console.log(response.data);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Registration successful!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/login';
+        }
+        });
+    
+    } catch (error) {
+      // console.error('Error registering user:', error);
+      if(error.response.status == 401){
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Email already in use. Please register a new email or login.'
+        });
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Failed to register user. Please try again later.'
+        });
+      }
+    }
+  };
+
   return (
     <div 
       className="flex justify-center items-center h-screen" 
@@ -24,7 +82,7 @@ const SignUp = () => {
         </div>
 
         {/* FOOOORM */}
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
               <div className="rounded-md shadow-sm -space-y-px">
                 <div className="flex flex-wrap -mx-3">
@@ -34,7 +92,9 @@ const SignUp = () => {
                     </label>
                     <input
                       id="first-name"
-                      name="first-name"
+                      name="fname"
+                      value={formData.fname} 
+                      onChange={handleChange}
                       type="text"
                       autoComplete="given-name"
                       required
@@ -48,7 +108,9 @@ const SignUp = () => {
                       </label>
                       <input
                         id="last-name"
-                        name="last-name"
+                        name="lname"
+                        value={formData.lname} 
+                        onChange={handleChange}
                         type="text"
                         autoComplete="given-name"
                         required
@@ -62,7 +124,9 @@ const SignUp = () => {
                         </label>
                         <input
                           id="additional-info"
-                          name="additional-info"
+                          name="email"
+                          value={formData.email} 
+                          onChange={handleChange}
                           type="text"
                           autoComplete="off"
                           required
@@ -76,7 +140,9 @@ const SignUp = () => {
                           </label>
                           <input
                             id="field4"
-                            name="field4"
+                            name="password"
+                            value={formData.password} 
+                            onChange={handleChange}
                             type="text"
                             autoComplete="off"
                             required
@@ -90,7 +156,9 @@ const SignUp = () => {
                             </label>
                             <input
                               id="field5"
-                              name="field5"
+                              name="cpassword"
+                              value={formData.cpassword} 
+                              onChange={handleChange}
                               type="text"
                               autoComplete="off"
                               required

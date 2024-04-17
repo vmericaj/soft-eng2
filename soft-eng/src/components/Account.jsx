@@ -98,11 +98,11 @@ const Account = () => {
         </div>
         {/* Sidebar navigation */}
         <nav>
-          <Link to="/" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/inventory" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <TfiDashboard className="mr-2" />
             DASHBOARD
           </Link>
-          <Link to="/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
+          <Link to="/admin/projects" className="flex items-center px-4 py-2 text-white hover:text-customOrange">
             <MdInventory2 className="mr-2" /> 
             PROJECTS
           </Link>
@@ -121,9 +121,9 @@ const Account = () => {
         </nav>
         {/* Logout button */}
         <div className="flex items-center px-4 -mx-2 mt-auto"> {/* Added mt-auto to push the button to the bottom */}
-          <button className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
-            <span>LOGOUT</span>
-          </button>
+          <Link to='/' className="flex items-center font-bold justify-center w-full px-4 py-2 text-black bg-customOrange rounded-md hover:bg-customBlue hover:text-white">
+                <span>LOGOUT</span>
+          </Link>
         </div>
       </div>
 
